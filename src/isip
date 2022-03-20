@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 12/03/22            #
+#############################
+[[ "$1" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]] || { echo "$1 is not an IPv4 address."; exit 1; }
+    
+for NUMBER in ${1//./ }; do                                                                                             # Create a list with the numbers in the string by substituting the dot that separates them with a blank. (example: string is 123.456.789.101, results in 123 456 789 101)
+    [[ "${NUMBER}" -ge 0 && "${NUMBER}" -le 255 ]] || { echo "$1 is not an IPv4 address."; exit 1; }
+done
+
+echo "$1 is an IPv4 address."
