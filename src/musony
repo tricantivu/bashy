@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 05/02/2022          #
+#############################
+
+# Colors for output messages. (See for more information: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
+readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"
+
+# Functions
+welcomeMessage(){
+    printf "%b\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"   # Use some rainbow colors in the message.
+}
+
+# Print how many packages are installed in the system.
+packagesCount(){
+    local packageManagers=('apt' 'dnf' 'pacman')
+
+    for packageManager in "${packageManagers[@]}"; do
+        if which "${packageManager}" &> /dev/null; then                                                                                         # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
+            case "${packageManager}" in
+                (apt)
+                    echo "Packages: $(apt list --installed 2> /dev/null | wc -l)"
+                ;;
+                (dnf)
+                    echo "Packages: $(dnf list --installed | wc -l)"
+                ;;
+                (pacman)
+                    echo "Packages: $(pacman -Q | wc -l)"
+                ;;
+            esac
+        else
+            continue
+        fi
+    done
+}
+
+getDistribution(){
+    local distributionName="$(lsb_release -ds)"
+    printf "%s\n" "Distribution: ${distributionName//\"/}"
+}
+
+getShell(){
+    printf "%s\n" "Shell: ${SHELL#/*/}"
+}
+
+welcomeMessage
+getShell
+packagesCount
+getDistribution
