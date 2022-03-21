@@ -1,7 +1,7 @@
 #!/bin/bash
-readonly LOGFILE='chk4up.log'
+readonly LOGFILE="${HOME}/chk4up.log"
 
-exec 2> ~/"${LOGFILE}"                                                              # Store error messages in a log file inside the user's home directory.
+exec 2> "${LOGFILE}"
 
 which pamac &> /dev/null || { echo 'ERROR: pamac is not installed!' >&2; exit 1; }
 
