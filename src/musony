@@ -5,19 +5,19 @@
 # Date: 05/02/2022          #
 #############################
 
-# Colors for output messages. (See for more information: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
-readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"
+# Global variables
+readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
 # Functions
 welcomeMessage(){
-    printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"   # Use some rainbow colors in the message.
+    printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
 }
 
 packageCount(){
     local packageManagers=('apt' 'dnf' 'pacman')
 
     for packageManager in "${packageManagers[@]}"; do
-        if which "${packageManager}" &> /dev/null; then                                                                                         # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
+        if which "${packageManager}" &> /dev/null; then                                                                                             # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
             case "${packageManager}" in
                 (apt)
                     echo "Packages: $(apt list --installed 2> /dev/null | wc -l)"
