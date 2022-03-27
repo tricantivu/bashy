@@ -10,7 +10,7 @@ readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e
 
 # Functions
 welcomeMessage(){
-    printf "%b\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"   # Use some rainbow colors in the message.
+    printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"   # Use some rainbow colors in the message.
 }
 
 packageCount(){
