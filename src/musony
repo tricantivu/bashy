@@ -13,8 +13,7 @@ welcomeMessage(){
     printf "%b\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"   # Use some rainbow colors in the message.
 }
 
-# Print how many packages are installed in the system.
-packagesCount(){
+packageCount(){
     local packageManagers=('apt' 'dnf' 'pacman')
 
     for packageManager in "${packageManagers[@]}"; do
@@ -47,5 +46,5 @@ getShell(){
 
 welcomeMessage
 getShell
-packagesCount
+packageCount
 getDistribution
