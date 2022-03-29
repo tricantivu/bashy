@@ -6,12 +6,12 @@
 #############################
 readonly feedsFile="${HOME}/.newsboat/urls"                                                                                                                 # File which stores the feeds.
 
-[[ $# -gt 0 ]] || { printf '%s\n' "ERROR! Insufficient arguments, please provide one or more feeds as follows: rss \"URL1\"..." >&2; exit 1; }
+[[ $# -gt 0 ]] || { echo "ERROR! Insufficient arguments, please provide one or more feeds as follows: rss \"URL1\"..." >&2; exit 1; }
 
 for URL in "$@"; do                                                                                                                                         # Credits to: amertune (https://stackoverflow.com/users/305563/amertune) for the answer in https://stackoverflow.com/a/2581760
     if [[ -s "${feedsFile}" ]]; then
-        { printf '%s\n' "Adding feed ${URL} ..."; tee --append "${feedsFile}" <<< "${URL}" > /dev/null; }                                                   # Append to avoid overwriting the feeds file. Credits to: Martin (https://stackoverflow.com/users/119159/martin) for the answer in https://stackoverflow.com/a/4775845
+        { echo "Adding feed ${URL} ..."; tee --append "${feedsFile}" <<< "${URL}" > /dev/null; }                                                   # Append to avoid overwriting the feeds file. Credits to: Martin (https://stackoverflow.com/users/119159/martin) for the answer in https://stackoverflow.com/a/4775845
     else
-        { printf '%s\n' "Adding feed ${URL}..."; tee "${feedsFile}" <<< "${URL}" > /dev/null; }
+        { echo "Adding feed ${URL}..."; tee "${feedsFile}" <<< "${URL}" > /dev/null; }
     fi
 done
