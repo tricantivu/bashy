@@ -36,7 +36,10 @@ packageCount(){
 }
 
 getDistribution(){
-    local distributionName="$(lsb_release -ds)"
+    local distributionName
+
+    distributionName="$(lsb_release -ds)"
+
     printf "%s\n" "Distribution: ${distributionName//\"/}"
 }
 
