@@ -20,13 +20,13 @@ packageCount(){
         if which "${packageManager}" &> /dev/null; then                                                                                             # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
             case "${packageManager}" in
                 (apt)
-                    echo "Packages: $(apt list --installed 2> /dev/null | wc -l)"
+                    printf 'Packages: %d\n' "$(apt list --installed 2> /dev/null | wc -l)"
                 ;;
                 (dnf)
-                    echo "Packages: $(dnf list --installed | wc -l)"
+                    printf 'Packages: %d\n' "$(dnf list --installed | wc -l)"
                 ;;
                 (pacman)
-                    echo "Packages: $(pacman -Q | wc -l)"
+                    printf 'Packages: %d\n' "$(pacman -Q | wc -l)"
                 ;;
             esac
         else
