@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+usage() {
+   tee << HERE
+Description: scrot wrapper script.
+Usage: screenshot <MODE>
+
+Modes:
+
+    normal  - Take a screenshot of the entire screen.
+    grab    - Select a part of a window and take a screenshot of it.
+    help    - Show script usage.
+
+The screenshot will be saved in the current working directory.
+HERE
+}
+
+printError() {
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+# Constants
+readonly IMPERIAL_RED='#ED2939'
+
+# Check that the user chooses only one mode.
+if [[ $# -eq 0 ]]; then
+    { printError "No mode selected\n"; usage; exit 1; }
+elif [[ $# -gt 1 ]]; then
+    { printError "Too many modes selected!\n"; usage; exit 1; }
+fi
+
+# Validate mode.
+case "$1" in
+    (help)
+        { usage; exit 0; }
+    ;;
+    (grab)
+        { scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png'; notify-send 'Screenshot taken'; }
+    ;;
+    (normal)
+        { scrot -F 'screenshot-%d-%m-%Y-$wx$h.png'; notify-send 'Screenshot taken!'; }
+    ;;
+    (*)
+        { printError "Invalid mode \"$1\".\n"; usage; exit 1; }
+    ;;
+esac
