@@ -16,7 +16,8 @@ fi
 
 [[ "$1" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]] || { printError "\"$1\" is not an IPv4 address."; exit 1; }
 
-for NUMBER in ${1//./ }; do                                                                                                     # Create a list with the numbers in the string by substituting the dot that separates them with a blank. (example: string is 123.456.789.101, results in 123 456 789 101)
+# Loop through the numbers in the address to verify it.
+for NUMBER in ${1//./ }; do
     [[ "${NUMBER}" -ge 0 && "${NUMBER}" -le 255 ]] || { printError "\"$1\" is not an IPv4 address."; exit 1; }
 done
 
