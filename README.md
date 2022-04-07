@@ -13,6 +13,8 @@ Collection of Bash scripts.
 
 [GNU Bash >= 5.1.16](https://www.gnu.org/software/bash)
 
+[scrot](https://github.com/dreamer/scrot)
+
 
 # Installation instructions
 0. Open a terminal window.
