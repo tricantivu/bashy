@@ -17,7 +17,7 @@ rss "https://news.ycombinator.com/rss"
 USAGE
 }
 
-readonly feedsFile="${HOME}/.newsboat/urls"                                                                                                                 # File which stores the feeds.
+readonly feedsFile="${HOME}/.newsboat/urls"
 
 feeds="$*"
 
