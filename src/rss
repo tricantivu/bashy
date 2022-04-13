@@ -4,6 +4,19 @@
 # Author: Alejandro Cervera #
 # Date: 12/02/2022          #
 #############################
+usage() {
+    cat << USAGE
+Description: Add multiple feeds to Newsboat
+Usage: rss <URL>
+
+Examples:
+
+rss "http://rss.cnn.com/rss/edition_world.rss" "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+
+rss "https://news.ycombinator.com/rss"
+USAGE
+}
+
 readonly feedsFile="${HOME}/.newsboat/urls"                                                                                                                 # File which stores the feeds.
 
 [[ $# -gt 0 ]] || { echo "ERROR! Insufficient arguments, please provide one or more feeds as follows: rss \"URL1\"..." >&2; exit 1; }
