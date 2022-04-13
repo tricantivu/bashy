@@ -17,9 +17,7 @@ rss "https://news.ycombinator.com/rss"
 USAGE
 }
 
-feedsFile="${HOME}/.newsboat/urls"
-
-feeds="$*"
+feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 
 [[ $# -gt 0 ]] || { echo "ERROR! Insufficient arguments, please provide one or more feeds as follows: rss \"URL1\"..." >&2; exit 1; }
 
