@@ -19,7 +19,7 @@ USAGE
 
 feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 
-[[ $# -gt 0 ]] || { printf 'ERROR! %b\n' "No feeds to add.\n" >&2; usage; exit 1; }
+[[ $# -eq 0 ]] && { printf 'ERROR! %b\n' "No feeds to add.\n" >&2; usage; exit 1; }
 
 [[ ! -e "${feedsFile}" ]] && echo "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
 
