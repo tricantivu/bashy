@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 28/02/22            #
+#############################
+
+# Functions
+usage() {
+    cat << HERE
+Description: user(add|del) wrapper script to add or delete multiple users.
+Usage: adu <OPERATION> <USER>...
+
+Operations:
+
+    add <USER>
+        Add user <USER>.
+
+    delete <USER>
+        Delete user <USER>.
+
+    help
+        Show script usage.
+HERE
+}
+
+showError() {
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+# Constants
+readonly USERNAME_MAX_LENGTH=32                                                                                                                                             # Length value source: 'CAVEATS' section in useradd manual.
+
+[[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
+
+case "$1" in
+    ('add')
+        shift
+
+        # Validate the usernames.
+        for ARGUMENT in "$@"; do
+            [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]   && { showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."; continue; }
+            [[  "${ARGUMENT}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]] || { showError "Illegal characters found in ${ARGUMENT}'s username!"; continue; }                              # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
+        done
+
+        # Add users.
+        for ARGUMENT in "$@"; do
+            sudo useradd --create-home "${ARGUMENT}"
+        done
+    ;;
+    ('delete')
+        shift
+
+        # Delete users.
+        for username in "$@"; do
+             sudo userdel --remove -- "${username}" &> /dev/null || continue
+        done
+    ;;
+    ('help')
+        { usage; exit 0; }
+    ;;
+    (*)
+        { showError "Invalid operation \"$1\".\n"; usage; exit 1; }
+    ;;
+esac

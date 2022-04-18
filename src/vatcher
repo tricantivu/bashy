@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 23/01/2022          #
+#############################
+usage(){
+    tee << EOF
+Description: Rename FILES matching PATTERN to TEXT.
+Usage: vatcher "PATTERN" "TEXT" FILES
+
+
+NOTE: Quote PATTERN and TEXT to avoid errors with your shell.
+      PATTERN must be wildcards or a string.
+
+
+Example:
+
+vatcher FILE file FILE1 FILE2
+
+In such example vatcher will rename FILE1 and FILE2 to file1 and file2 (respectively) by substituting the pattern "FILE" with "file".
+EOF
+}
+
+printError(){
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+# Arguments.
+PATTERN="$1" TEXT="$2"
+
+if [[ $# -eq 0 ]]; then
+    { printError "No arguments\n"; usage; exit 1; }
+elif [[ $# -lt 4 ]]; then
+    { printError "Insufficient arguments\n"; usage; exit 1; }
+fi
+
+# Rename the files.
+shift 2
+
+for ARGUMENT in "$@"; do
+    if [[ ! -f "${ARGUMENT}" && ! -w "${ARGUMENT}" ]]; then
+        printError "${ARGUMENT} is not a readable file."
+        continue
+
+    elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
+        printError "File \"${ARGUMENT}\" does not match pattern \"${PATTERN}\""
+    fi
+done

@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Functions
+usage() {
+    cat << HERE
+Description: youtube-dl wrapper script script to store downloaded files in a specific directory.
+Usage: dl <DIRECTORY> <URL>
+
+Examples:
+
+dl /tmp "https://www.youtube.com/watch?v=jyCmnvBbm8Q"
+
+dl will download URL "https://www.youtube.com/watch?v=jyCmnvBbm8Q" and store it in /tmp directory.
+
+
+NOTE: Quote the URL(s) to prevent errors with your shell.
+HERE
+}
+
+showError() {
+    printf '%b\n' "${LIGHT_RED}ERROR${RESET}: ${scriptName}: $1" >&2
+}
+
+download() {
+    for URL in $1; do
+        if youtube-dl -q --no-warnings --no-part --exec "mv {} ${DIRECTORY}" "$2" -- "${URL}" 2>&-; then                    # https://stackoverflow.com/questions/3012877/how-to-prevent-code-option-injection-in-a-bash-script#3012903
+            printf '%b\n' "${scriptName}: URL \"${URL}\" ${LIGHT_GREEN}downloaded successfully!${RESET}"
+        else
+            showError "URL \"${URL}\" ${LIGHT_RED}could not be downloaded${RESET}"
+            continue
+        fi
+    done
+}
+
+# Global variables
+scriptName=${0##*/}
+
+# Arguments
+DIRECTORY=$1
+
+# Constants
+readonly LIGHT_RED='\e[91m' LIGHT_GREEN='\e[92m' RESET='\e[0m'
+
+# Verify script has the proper amount of arguments.
+[[ $# -eq 0 ]] && { showError "No arguments\n"; usage; exit 1; }
+[[ $# -ge 2 ]] || { showError "Insufficient arguments.\n"; usage; exit 1; }
+
+# Validate DIRECTORY.
+if [[ ! -e "${DIRECTORY}" ]]; then
+    { showError "Destination \"${DIRECTORY}\" does not exist."; exit 1; }
+elif [[ ! -d "${DIRECTORY}" ]]; then
+    { showError "Destination \"${DIRECTORY}\" is not a directory."; exit 1; }
+elif [[ ! -w "${DIRECTORY}" ]]; then
+    { showError "Destination directory \"${DIRECTORY}\" is not writable, modify its permissions."; exit 1; }
+fi
+
+# Set a trap to handle interrupt signals.
+trap 'exit 1' SIGINT
+
+# Download URLs
+read -r -p 'Store download(s) as audio file(s)? y/n ' userReply
+
+# Remove all set traps.
+trap &> /dev/null
+
+shift
+case "${userReply}" in
+    ([Yy] | 'Yes' | 'yes')
+        download "$@" "--extract-audio"
+    ;;
+    ([Nn] | 'No' | 'no')
+        download "$@"
+    ;;
+    (*)
+        { showError "Invalid reply \"${userReply}\""; exit 1; }
+    ;;
+esac
