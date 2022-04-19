@@ -14,25 +14,24 @@ welcomeMessage(){
 }
 
 packageCount(){
-    local packageManagers=('apt' 'dnf' 'pacman')
+    . /etc/os-release
 
-    for packageManager in "${packageManagers[@]}"; do
-        if which "${packageManager}" &> /dev/null; then                                                                                             # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
-            case "${packageManager}" in
-                (apt)
-                    printf 'Packages: %d\n' "$(apt list --installed 2> /dev/null | wc -l)"
-                ;;
-                (dnf)
-                    printf 'Packages: %d\n' "$(dnf list --installed | wc -l)"
-                ;;
-                (pacman)
-                    printf 'Packages: %d\n' "$(pacman -Q | wc -l)"
-                ;;
-            esac
-        else
-            continue
-        fi
-    done
+    # Detect distribution.
+    case "${ID_LIKE}" in
+        (*arch*)
+            echo -n "Packages: "; wc -l < <(pacman -Qq)
+        ;;
+        (*fedora*)
+            echo -n "Packages: "; wc -l < <(dnf list --installed) || \
+            echo -n "Packages: "; wc -l < <(yum list --installed)                                                                                   # Fallback to yum
+        ;;
+        (*debian*)
+            echo -n "Packages: "; wc -l < <(apt list --installed 2>&-)                                                                              # Silence warnings/errors in apt.
+        ;;
+        (*)
+            echo "Distribution could not be detected"
+        ;;
+    esac
 }
 
 getDistribution(){
