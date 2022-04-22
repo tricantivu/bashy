@@ -37,7 +37,7 @@ download() {
 
     mapfile -t URLs
 
-    [[ ${#URLs} -eq 0 ]] && { showError "No URL(s) to download."; exit 1; }
+    [[ ${#URLs[@]} -eq 0 ]] && { showError "No URL(s) to download."; exit 1; }
 
     for URL in "${URLs[@]}"; do
         if youtube-dl $1 --quiet --no-warnings --no-part --exec "mv {} ${DIRECTORY}" "${URL}" 2>&-; then
