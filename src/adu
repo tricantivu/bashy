@@ -29,7 +29,7 @@ showError() {
 }
 
 # Constants
-readonly USERNAME_MAX_LENGTH=32                                                                                                                                             # Length value source: 'CAVEATS' section in useradd manual.
+readonly USERNAME_MAX_LENGTH=32 USERNAME_REGEX='^[a-z_][a-z0-9_-]*[$]?$'                                                                                                    # Length value source: 'CAVEATS' section in useradd manual.
 
 [[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
 
@@ -42,7 +42,7 @@ case "$1" in
             if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
                 showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
                 continue
-            elif [[ ! "${ARGUMENT}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
+            elif [[ ! "${ARGUMENT}" =~ ${USERNAME_REGEX} ]]; then
                 showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
                 continue
             else
