@@ -4,10 +4,16 @@
 # Author: Alejandro Cervera #
 # Date: 25/12/2021          #
 #############################
+
+# Functions
+printError() {
+    printf '%b\n' "$1" >&2
+}
+
+# Constants
 readonly LIGHT_GREEN="\e[92m" LIGHT_RED="\e[91m" NORMAL="\e[0m"
 
-# Exit the script unsuccessfully if it's interrupted.
-trap 'echo Script was interrupted!; exit 1' SIGINT
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check for non-system accounts without a password.
 echo "Checking accounts..."
