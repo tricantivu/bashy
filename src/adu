@@ -55,11 +55,11 @@ case "$1" in
         shift
 
         # Delete users.
-        for username in "$@"; do
-             if sudo userdel --remove -- "${username}" &> /dev/null; then
-                printf 'Successfully deleted user %s.\n' "${username}"
+        for ARGUMENT in "$@"; do
+             if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
+                printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
              else
-                showError "Could not delete user \"${username}\"."
+                showError "Could not delete user \"${ARGUMENT}\"."
              fi
         done
     ;;
