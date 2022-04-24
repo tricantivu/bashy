@@ -47,7 +47,7 @@ case "$1" in
                 continue
             else
                 # Add user.
-                sudo useradd --create-home "${ARGUMENT}"
+                sudo useradd --create-home "${ARGUMENT}" &> /dev/null
             fi
         done
     ;;
