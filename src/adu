@@ -45,12 +45,10 @@ case "$1" in
             elif [[ ! "${ARGUMENT}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
                 showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
                 continue
+            else
+                # Add user.
+                sudo useradd --create-home "${ARGUMENT}"
             fi
-        done
-
-        # Add users.
-        for ARGUMENT in "$@"; do
-            sudo useradd --create-home "${ARGUMENT}"
         done
     ;;
     ('delete')
