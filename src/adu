@@ -37,10 +37,15 @@ case "$1" in
     ('add')
         shift
 
-        # Validate the usernames.
         for ARGUMENT in "$@"; do
-            [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]   && { showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."; continue; }
-            [[  "${ARGUMENT}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]] || { showError "Illegal characters found in ${ARGUMENT}'s username!"; continue; }                              # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
+            # Validate the username.
+            if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
+                showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
+                continue
+            elif [[ ! "${ARGUMENT}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
+                showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
+                continue
+            fi
         done
 
         # Add users.
@@ -53,7 +58,11 @@ case "$1" in
 
         # Delete users.
         for username in "$@"; do
-             sudo userdel --remove -- "${username}" &> /dev/null || continue
+             if sudo userdel --remove -- "${username}" &> /dev/null; then
+                printf 'Successfully deleted user %s.\n' "${username}"
+             else
+                showError "Could not delete user \"${username}\"."
+             fi
         done
     ;;
     ('help')
