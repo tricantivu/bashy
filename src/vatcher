@@ -42,7 +42,6 @@ for ARGUMENT in "$@"; do
     if [[ ! -f "${ARGUMENT}" && ! -w "${ARGUMENT}" ]]; then
         printError "${ARGUMENT} is not a readable file."
         continue
-
     elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
         printError "File \"${ARGUMENT}\" does not match pattern \"${PATTERN}\""
     fi
