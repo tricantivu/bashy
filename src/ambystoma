@@ -26,6 +26,9 @@ for ARGUMENT in "$@"; do
     if [[ ! -d "${CACHE_DIR}/${directoryBasename}" ]]; then                                      # Check if the argument is a subdirectory of ~/.cache.
         printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
         continue
+    elif ! find "${CACHE_DIR}/${directoryBasename}" | sed '1d' | grep '.'; then
+        printError "${ARGUMENT} is empty, nothing to delete."
+        continue
     else
         rm -ri "${ARGUMENT}"/*
     fi
