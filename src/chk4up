@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-readonly LOGFILE="${HOME}/chk4up.log"
-
-exec 2> "${LOGFILE}"
 
 which pamac &> /dev/null || { echo 'ERROR: pamac is not installed!' >&2; exit 1; }
 
