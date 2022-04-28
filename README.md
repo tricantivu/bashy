@@ -1,5 +1,5 @@
 # Bashy
-Collection of Bash scripts.
+Collection of shell scripts.
 
 
 # Software required
