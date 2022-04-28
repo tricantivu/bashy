@@ -1,0 +1,5 @@
+#!/bin/sh
+
+unparsedUptime="$(uptime -p)"
+
+echo "💻 ${unparsedUptime##'up '}"
