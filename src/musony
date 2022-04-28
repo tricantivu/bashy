@@ -43,7 +43,7 @@ getDistribution(){
 }
 
 getShell(){
-    printf "%s\n" "Shell: ${SHELL#/*/}"
+    printf "%s\n" "Shell: ${SHELL##*/}"
 }
 
 osInfo(){
