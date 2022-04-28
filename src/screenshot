@@ -34,12 +34,12 @@ case "$1" in
         { usage; exit 0; }
     ;;
     (grab)
-        scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' || { notify-send 'Screenshot was aborted.'; exit 1; }
+        scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Screenshot was aborted.'; exit 1; }
 
         notify-send 'Screenshot taken'
     ;;
     (normal)
-        scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' || { notify-send 'Could not take screenshot.'; exit 1; }
+        scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Could not take screenshot.'; exit 1; }
 
         notify-send 'Screenshot taken!'
     ;;
