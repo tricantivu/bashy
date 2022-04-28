@@ -46,7 +46,26 @@ getShell(){
     printf "%s\n" "Shell: ${SHELL#/*/}"
 }
 
+osInfo(){
+    local operatingSystem kernelRelease
+
+    # Parse OS name.
+    case "${OSTYPE}" in
+        (linux-gnu)
+            operatingSystem='GNU/Linux'
+        ;;
+        (*)
+            operatingSystem="${OSTYPE}"
+        ;;
+    esac
+
+    kernelRelease="$(uname -r)"
+
+    printf "%s\n" "OS: ${operatingSystem}" "Kernel: ${kernelRelease}" "Architecture: ${HOSTTYPE}"
+}
+
 welcomeMessage
 getShell
+osInfo
 packageCount
 getDistribution
