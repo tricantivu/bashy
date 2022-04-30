@@ -8,7 +8,7 @@
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
-usage(){
+usage() {
 tee << EOF
 
 Usage: saveit OPTION ARGUMENT

@@ -9,11 +9,11 @@
 readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
 # Functions
-welcomeMessage(){
+welcomeMessage() {
     printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
 }
 
-packageCount(){
+packageCount() {
     . /etc/os-release
 
     # Detect distribution.
@@ -34,7 +34,7 @@ packageCount(){
     esac
 }
 
-getDistribution(){
+getDistribution() {
     local distributionName
 
     distributionName="$(lsb_release -ds)"
@@ -42,11 +42,11 @@ getDistribution(){
     printf "%s\n" "Distribution: ${distributionName//\"/}"
 }
 
-getShell(){
+getShell() {
     printf "%s\n" "Shell: ${SHELL##*/}"
 }
 
-osInfo(){
+osInfo() {
     local operatingSystem kernelRelease
 
     # Parse OS name.

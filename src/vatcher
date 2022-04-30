@@ -4,7 +4,7 @@
 # Author: Alejandro Cervera #
 # Date: 23/01/2022          #
 #############################
-usage(){
+usage() {
     tee << EOF
 Description: Rename FILES matching PATTERN to TEXT.
 Usage: vatcher "PATTERN" "TEXT" FILES
@@ -22,7 +22,7 @@ In such example vatcher will rename FILE1 and FILE2 to file1 and file2 (respecti
 EOF
 }
 
-printError(){
+printError() {
     printf '%b\n' "ERROR: $1" >&2
 }
 

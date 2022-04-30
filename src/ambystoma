@@ -4,14 +4,14 @@
 # Author: Alejandro Cervera #
 # Date: 21/12/2021          #
 #############################
-usage(){
+usage() {
     tee << EOF
 Description: Empty one or more program's cache and delete old log files.
 Usage: ambystoma <DIRECTORY>
 EOF
 }
 
-printError(){
+printError() {
     printf '%b\n' "ERROR: $1" >&2
 }
 
