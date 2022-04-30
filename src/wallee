@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 22/01/2022          #
+#############################
+usage() {
+    local scriptName="${0##*/}"
+
+cat << USAGE
+Description: feh wrapper script to set a random wallpaper from a directory.
+Usage: ${scriptName} <OPTION> <DIRECTORY>
+
+Available options:
+
+    -d, -dir, --directory DIRECTORY
+
+        Set wallpaper from directory DIRECTORY.
+
+    -h, -help, --help
+
+        Show script usage.
+USAGE
+}
+
+printError() {
+    printf '%b\n' "$1" >&2
+}
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+
+# Parse options.
+case "$1" in
+    (-d | -dir | --directory)
+        shift
+
+        wallpapersDirectory="$1"
+    ;;
+    (-h | -help | --help)
+        { usage; exit 0; }
+    ;;
+    ('')
+        { printError "No option selected."; exit 1; }
+    ;;
+    (*)
+        { printError "Invalid option \"$1\"."; exit 1; }
+    ;;
+esac
+
+# Validate option argument.
+[[ -z "${wallpapersDirectory}" || ${wallpapersDirectory} =~ ^[[:blank:]]+$ ]] && {
+    printError "Could not change wallpaper, no directory was specified."
+
+    exit 1
+}
+
+[[ -e "${wallpapersDirectory}" ]] || {
+    printError "Could not change wallpaper, directory \"${wallpapersDirectory}\" does not exist."
+
+    exit 1
+}
+
+[[ -d "${wallpapersDirectory}" ]] || {
+    printError "Could not change wallpaper, argument \"${wallpapersDirectory}\" is not a directory."
+
+    exit 1
+}
+
+[[ -r "${wallpapersDirectory}" ]] || {
+    printError "Could not change wallpaper, directory \"${wallpapersDirectory}\" does not have read permissions."
+
+    exit 1
+}
+
+# Set wallpaper.
+if feh --bg-scale --randomize "${wallpapersDirectory}"/*; then
+    echo "Wallpaper set successfully."
+else
+    { printError "Could not set wallpaper."; exit 1; }
+fi
+
+# Remove trap.
+trap &> /dev/null
