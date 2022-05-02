@@ -45,14 +45,8 @@ select distributionType in "Arch based" "Debian based" "RHEL based"; do
             break
         ;;
         ('Debian based')
-            { printf '\n%s\n\n' "Searching for updates..."; sudo apt-get -y update; }
-            if [[ "$(apt list --upgradable 2>&- | sed '1d' | wc -l)" -eq 0 ]]; then                                 # Gets a count of upgradable packages.
-                printf '\n%s\n' "No updates available!"
-                break
-            else
-                { printf '%s\n\n' "Updates are available, applying them now..."; sudo apt-get -y upgrade; }
-                break
-            fi
+            { sudo apt-get -y upgrade && sudo apt-get -y update; }
+            break
         ;;
         ('RHEL based')
             sudo dnf -y up || sudo yum -y update
