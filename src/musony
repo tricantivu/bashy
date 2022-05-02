@@ -13,6 +13,19 @@ welcomeMessage() {
     printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
 }
 
+debianCount() {
+    echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                                      # Silence warnings/errors in apt.
+}
+
+fedoraCount() {
+    echo -n "Packages: "; wc -l < <(dnf list --installed) || \
+    echo -n "Packages: "; wc -l < <(yum list --installed)                                                                                           # Fallback to yum
+}
+
+archCount() {
+    echo -n "Packages: "; wc -l < <(pacman -Qq)
+}
+
 packageCount() {
     . /etc/os-release
 
@@ -21,14 +34,13 @@ packageCount() {
         # Attempt detecting distribution by seeing what distributions are related.
         case "${ID_LIKE}" in
             (*arch*)
-                echo -n "Packages: "; wc -l < <(pacman -Qq)
+                archCount
             ;;
             (*fedora*)
-                echo -n "Packages: "; wc -l < <(dnf list --installed) || \
-                echo -n "Packages: "; wc -l < <(yum list --installed)                                                                               # Fallback to yum
+                fedoraCount
             ;;
             (*debian*)
-                echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                          # Silence warnings/errors in apt.
+                debianCount
             ;;
             (*)
                 echo "Could not get package count."
@@ -38,14 +50,13 @@ packageCount() {
         # If the attempt fails, check the identifier set by vendors.
         case "${ID}" in
             (arch)
-                echo -n "Packages: "; wc -l < <(pacman -Qq)
+                archCount
             ;;
             (fedora)
-                echo -n "Packages: "; wc -l < <(dnf list --installed) || \
-                echo -n "Packages: "; wc -l < <(yum list --installed)
+                fedoraCount
             ;;
             (debian)
-                echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)
+                debianCount
             ;;
             (*)
                 echo "Could not get package count."
