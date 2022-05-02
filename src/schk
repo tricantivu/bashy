@@ -36,7 +36,7 @@ while read -r userAccount; do
 done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
 
 # Check for package updates and apply them if any are available.
-printf '\n%s\n' "What type of distribution are you using:"
+printf '%b\n' "\nWhat type of distribution are you using:"
 
 select distributionType in "Arch based" "Debian based" "RHEL based"; do
     case "${distributionType}" in
@@ -56,7 +56,7 @@ select distributionType in "Arch based" "Debian based" "RHEL based"; do
 done
 
 # Show open ports.
-{ printf '\n%s\n' "Open ports:"; ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq; }
+{ printf '%b\n' "\nOpen ports:"; ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq; }
 
 # Show disk usage.
 { echo "Percentage of disk used in root (/) partition:"; df -h / | tail -1 | awk '{print $5}'; }
