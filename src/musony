@@ -29,7 +29,7 @@ packageCount() {
             echo -n "Packages: "; wc -l < <(apt list --installed 2>&-)                                                                              # Silence warnings/errors in apt.
         ;;
         (*)
-            echo "Distribution could not be detected"
+            echo "Could not get package count."
         ;;
     esac
 }
