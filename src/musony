@@ -28,7 +28,7 @@ packageCount() {
                 echo -n "Packages: "; wc -l < <(yum list --installed)                                                                               # Fallback to yum
             ;;
             (*debian*)
-                echo -n "Packages: "; wc -l < <(apt list --installed 2>&-)                                                                          # Silence warnings/errors in apt.
+                echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                          # Silence warnings/errors in apt.
             ;;
             (*)
                 echo "Could not get package count."
@@ -45,7 +45,7 @@ packageCount() {
                 echo -n "Packages: "; wc -l < <(yum list --installed)
             ;;
             (debian)
-                echo -n "Packages: "; wc -l < <(apt list --installed 2>&-)
+                echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)
             ;;
             (*)
                 echo "Could not get package count."
