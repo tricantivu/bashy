@@ -41,15 +41,15 @@ printf '%b\n' "\nWhat type of distribution are you using:"
 select distributionType in "Arch based" "Debian based" "RHEL based"; do
     case "${distributionType}" in
         ('Arch based')
-            sudo pacman --noconfirm --color always -Syu
+            sudo pacman --noconfirm --color always -Syu 2>&-
             break
         ;;
         ('Debian based')
-            { sudo apt-get -y upgrade && sudo apt-get -y update; }
+            { sudo apt-get -y upgrade && sudo apt-get -y update; } 2>&-
             break
         ;;
         ('RHEL based')
-            sudo dnf -y up || sudo yum -y update
+            sudo dnf -y up 2>&- || sudo yum -y update 2>&-
             break
         ;;
     esac
