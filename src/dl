@@ -46,7 +46,7 @@ download() {
             printf 'URL: %s\n' "\"${URL}\" downloaded successfully."
         else
             showError "URL: \"${URL}\" could not be downloaded."
-            failedDownloads=$(( failedDownloads+=1 ))
+            ((failedDownloads++))
             continue
         fi
     done
@@ -63,7 +63,7 @@ trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 optionCount=0
 
 while getopts ':ad:h' OPTION; do
-    optionCount=$(( optionCount+=1 ))
+    ((optionCount++))
 
     case "${OPTION}" in
         (a)

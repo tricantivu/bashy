@@ -27,7 +27,7 @@ printError() {
 optionCount=0
 
 while getopts ':p:h' OPTION; do
-    optionCount=$((optionCount+=1))
+    ((optionCount++))
 
     case "${OPTION}" in
         (p)
