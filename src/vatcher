@@ -25,14 +25,14 @@ printError() {
     printf '%b\n' "ERROR: $1" >&2
 }
 
-# Arguments.
-PATTERN="$1" TEXT="$2"
-
 if [[ $# -eq 0 ]]; then
     { printError "No arguments\n"; usage; exit 1; }
 elif [[ $# -lt 4 ]]; then
     { printError "Insufficient arguments\n"; usage; exit 1; }
 fi
+
+# Arguments.
+PATTERN="$1" TEXT="$2"
 
 # Rename the files.
 shift 2
