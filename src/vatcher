@@ -39,9 +39,9 @@ shift 2
 
 for ARGUMENT in "$@"; do
     if [[ ! -f "${ARGUMENT}" ]]; then
-        printError "${ARGUMENT} is not a readable file."
+        printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
         continue
     elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
-        printError "File \"${ARGUMENT}\" does not match pattern \"${PATTERN}\""
+        printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
     fi
 done
