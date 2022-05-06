@@ -38,11 +38,16 @@ PATTERN="$1" TEXT="$2"
 shift 2
 
 for ARGUMENT in "$@"; do
+    parentDirectory="$(dirname "${ARGUMENT}")"
+
     if [[ ! -f "${ARGUMENT}" ]]; then
         printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
         continue
     elif [[ ! -w "${ARGUMENT}" ]]; then
         printError "Can not rename \"${ARGUMENT}\", it does not have write permission."
+        continue
+    elif [[ ! -x "${parentDirectory}" ]]; then                                                                      # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
+        printError "Can not rename \"${ARGUMENT}\", the directory it is contained in can not be accesed."
         continue
     elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
         printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
