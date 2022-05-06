@@ -38,7 +38,7 @@ PATTERN="$1" TEXT="$2"
 shift 2
 
 for ARGUMENT in "$@"; do
-    if [[ ! -f "${ARGUMENT}" && ! -w "${ARGUMENT}" ]]; then
+    if [[ ! -f "${ARGUMENT}" ]]; then
         printError "${ARGUMENT} is not a readable file."
         continue
     elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
