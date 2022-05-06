@@ -7,7 +7,7 @@
 usage() {
     tee << EOF
 Description: Batch file rename script
-Usage: vatcher "PATTERN" "TEXT" FILES
+Usage: vatcher <PATTERN> <TEXT> <FILES>
 
 
 NOTE: Quote PATTERN and TEXT to avoid errors with your shell.

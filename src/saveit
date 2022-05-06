@@ -11,7 +11,7 @@ newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 usage() {
 tee << EOF
 
-Usage: saveit OPTION ARGUMENT
+Usage: saveit <OPTION> <ARGUMENT>
 Description: Backup and restore newsboat feeds and calcurse's data.
 
 Options:
