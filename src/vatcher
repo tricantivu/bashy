@@ -41,6 +41,9 @@ for ARGUMENT in "$@"; do
     if [[ ! -f "${ARGUMENT}" ]]; then
         printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
         continue
+    elif [[ ! -w "${ARGUMENT}" ]]; then
+        printError "Can not rename \"${ARGUMENT}\", it does not have write permission."
+        continue
     elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$TEXT}"; then
         printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
     fi
