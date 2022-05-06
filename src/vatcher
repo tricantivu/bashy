@@ -6,7 +6,7 @@
 #############################
 usage() {
     tee << EOF
-Description: Rename FILES matching PATTERN to TEXT.
+Description: Batch file rename script
 Usage: vatcher "PATTERN" "TEXT" FILES
 
 
