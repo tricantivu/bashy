@@ -47,10 +47,10 @@ while getopts ':b:r:h' OPTION; do
             { usage; exit 0; }
         ;;
         ('?')
-            { printError "Unknown option -${OPTARG}!"; usage; exit 1; }
+            { printError "Unknown option -${OPTARG}!"; exit 1; }
         ;;
         (:)
-            { printError "-${OPTARG} option expected an argument!"; usage; exit 1; }
+            { printError "-${OPTARG} option expected an argument!"; exit 1; }
         ;;
     esac
 done
