@@ -6,8 +6,7 @@
 #############################
 
 usage() {
-tee << EOF
-
+    tee << EOF
 Usage: saveit <OPTION> <ARGUMENT>
 Description: Backup and restore newsboat feeds and calcurse's data.
 
