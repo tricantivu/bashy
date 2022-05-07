@@ -28,16 +28,11 @@ printError() {
     printf '%s\n' "ERROR: saveit: $1" >&2
 }
 
-verifyInstalled() {
-    which "$1" &> /dev/null
-}
-
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
 # Check dependencies.
-verifyInstalled "calcurse" || { printError "calcurse is not installed, please install it before using this script."; exit 1; }
-verifyInstalled "newsboat" || { printError "newsboat is not installed, please install it before using this script."; exit 1; }
+which calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
 
 # Handle options.
 while getopts ':b:r:h' OPTION; do
