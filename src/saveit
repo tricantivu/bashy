@@ -51,9 +51,13 @@ while getopts ':b:r:h' OPTION; do
     case "${OPTION}" in
         (b)
             backupName="${OPTARG}"
+
+            backupOption='true'
         ;;
         (r)
             pathToBackup="${OPTARG}"
+
+            restoreOption='true'
         ;;
         (h)
             { usage; exit 0; }
