@@ -25,7 +25,7 @@ EOF
 }
 
 printError() {
-    printf '%s\n' "ERROR: saveit: $1" >&2
+    printf '%b\n' "$1" >&2
 }
 
 # Global variables
