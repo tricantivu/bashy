@@ -42,8 +42,12 @@ newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 # Check dependencies.
 which calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
 
-# Handle options.
+# Parse options.
+optionCount=0
+
 while getopts ':b:r:h' OPTION; do
+    (( optionCount++ ))
+
     case "${OPTION}" in
         (b)
             backupName="${OPTARG}"
@@ -62,6 +66,8 @@ while getopts ':b:r:h' OPTION; do
         ;;
     esac
 done
+
+[[ ${optionCount} -eq 0 ]] && { printError "No options were specified."; exit 1; }
 
 checkRunning 'calcurse' 'newsboat'
 
