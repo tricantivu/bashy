@@ -27,6 +27,15 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
+checkRunning() {
+    for programName in "$@"; do
+        pgrep -i "${programName}" &> /dev/null && {
+             printError "${programName} can not be running while executing this script."
+             exit 1
+         }
+    done
+}
+
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
@@ -54,12 +63,7 @@ while getopts ':b:r:h' OPTION; do
     esac
 done
 
-# Check if calcurse or newsboat are running to avoid unexpected behaviour when restoring/creating a backup.
-if pgrep -i newsboat &> /dev/null; then
-    { printError "Newsboat is running! Please close all instances of it before running the script."; exit 1; }
-elif pgrep -i calcurse &> /dev/null; then
-    { printError "Calcurse is running! Please close all instances of it before running the script."; exit 1; }
-fi
+checkRunning 'calcurse' 'newsboat'
 
 # Create backup.
 { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                # Export newsboat's and calcurse's data in order to be backed up.
