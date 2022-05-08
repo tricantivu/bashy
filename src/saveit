@@ -78,18 +78,24 @@ checkRunning 'calcurse' 'newsboat'
 { "${backupOption:=false}" && "${restoreOption:=false}"; } && { printError "-r and -b options can not be used simultaneously."; exit 1; }
 
 # Create backup.
-{ newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                # Export newsboat's and calcurse's data in order to be backed up.
 
-if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then                                   # Creates the backup.
-    { echo "Backup \"${backupName}\" created successfully!"; exit 0; }
-else
-    { printError "Could not create backup \"${backupName}\""; exit 1; }
-fi
+"${backupOption}" && {
+    { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                    # Export newsboat's and calcurse's data in order to be backed up.
+
+    if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then
+        { echo "Backup \"${backupName}\" created successfully!"; exit 0; }
+    else
+        { printError "Could not create backup \"${backupName}\""; exit 1; }
+    fi
+}
 
 # Restore backup.
-if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                       # Extract the contents of the backup.
-    echo "Restoring backup \"${pathToBackup}\"..."
-    { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}" && echo "Backup restored successfully!"; }
-else
-    { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
-fi
+
+"${restoreOption}" && {
+    if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
+        echo "Restoring backup \"${pathToBackup}\"..."
+        { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}" && echo "Backup restored successfully!"; }
+    else
+        { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
+    fi
+}
