@@ -75,6 +75,8 @@ done
 
 checkRunning 'calcurse' 'newsboat'
 
+{ "${backupOption:=false}" && "${restoreOption:=false}"; } && { printError "-r and -b options can not be used simultaneously."; exit 1; }
+
 # Create backup.
 { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                # Export newsboat's and calcurse's data in order to be backed up.
 
