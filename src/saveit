@@ -83,7 +83,8 @@ checkRunning 'calcurse' 'newsboat'
     { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                    # Export newsboat's and calcurse's data in order to be backed up.
 
     if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then
-        { echo "Backup \"${backupName}\" created successfully!"; exit 0; }
+        echo "Backup \"${backupName}\" created successfully!"
+        exit 0
     else
         { printError "Could not create backup \"${backupName}\""; exit 1; }
     fi
@@ -95,7 +96,9 @@ checkRunning 'calcurse' 'newsboat'
     echo "Restoring backup \"${pathToBackup}\"..."
 
     if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
-        { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}" && echo "Backup restored successfully!"; }
+        { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}"; }
+
+        echo "Backup restored successfully!"
     else
         { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
     fi
