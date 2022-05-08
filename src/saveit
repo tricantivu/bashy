@@ -92,8 +92,9 @@ checkRunning 'calcurse' 'newsboat'
 # Restore backup.
 
 "${restoreOption}" && {
+    echo "Restoring backup \"${pathToBackup}\"..."
+
     if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
-        echo "Restoring backup \"${pathToBackup}\"..."
         { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}" && echo "Backup restored successfully!"; }
     else
         { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
