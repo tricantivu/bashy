@@ -55,6 +55,8 @@ download() {
 
     [[ ${#URLs[@]} -eq 0 ]] && { showError "No URL(s) to download."; exit 1; }
 
+    printf '%b\n' "\nDownloading has begun, please be patient...\n"
+
     for URL in "${URLs[@]}"; do
         if [[ -z "${URL}" ]]; then
             continue
