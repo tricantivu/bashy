@@ -5,13 +5,9 @@
 # Date: 14/02/22            #
 #############################
 
-# Global variables
-newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
-
-usage(){
-tee << EOF
-
-Usage: saveit OPTION ARGUMENT
+usage() {
+    tee << EOF
+Usage: saveit <OPTION> <ARGUMENT>
 Description: Backup and restore newsboat feeds and calcurse's data.
 
 Options:
@@ -28,58 +24,84 @@ EOF
 }
 
 printError() {
-    printf '%s\n' "ERROR: saveit: $1" >&2
+    printf '%b\n' "$1" >&2
 }
 
-verifyInstalled() {
-    which "$1" &> /dev/null
+checkRunning() {
+    for programName in "$@"; do
+        pgrep -i "${programName}" &> /dev/null && {
+             printError "${programName} can not be running while executing this script."
+             exit 1
+         }
+    done
 }
+
+# Global variables
+newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
 # Check dependencies.
-verifyInstalled "calcurse" || { printError "calcurse is not installed, please install it before using this script."; exit 1; }
-verifyInstalled "newsboat" || { printError "newsboat is not installed, please install it before using this script."; exit 1; }
+which calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
 
-# Handle options.
+# Parse options.
+optionCount=0
+
 while getopts ':b:r:h' OPTION; do
+    (( optionCount++ ))
+
     case "${OPTION}" in
         (b)
             backupName="${OPTARG}"
+
+            backupOption='true'
         ;;
         (r)
             pathToBackup="${OPTARG}"
+
+            restoreOption='true'
         ;;
         (h)
             { usage; exit 0; }
         ;;
         ('?')
-            { printError "Unknown option -${OPTARG}!"; usage; exit 1; }
+            { printError "Unknown option -${OPTARG}!"; exit 1; }
         ;;
         (:)
-            { printError "-${OPTARG} option expected an argument!"; usage; exit 1; }
+            { printError "-${OPTARG} option expected an argument!"; exit 1; }
         ;;
     esac
 done
 
-# Check if calcurse or newsboat are running to avoid unexpected behaviour when restoring/creating a backup.
-if pgrep -i newsboat &> /dev/null; then
-    { printError "Newsboat is running! Please close all instances of it before running the script."; exit 1; }
-elif pgrep -i calcurse &> /dev/null; then
-    { printError "Calcurse is running! Please close all instances of it before running the script."; exit 1; }
-fi
+[[ ${optionCount} -eq 0 ]] && { printError "No options were specified."; exit 1; }
+
+checkRunning 'calcurse' 'newsboat'
+
+{ "${backupOption:=false}" && "${restoreOption:=false}"; } && { printError "-r and -b options can not be used simultaneously."; exit 1; }
 
 # Create backup.
-{ newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                # Export newsboat's and calcurse's data in order to be backed up.
 
-if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then                                   # Creates the backup.
-    { echo "Backup \"${backupName}\" created successfully!"; exit 0; }
-else
-    { printError "Could not create backup \"${backupName}\""; exit 1; }
-fi
+"${backupOption}" && {
+    { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                    # Export newsboat's and calcurse's data in order to be backed up.
+
+    if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then
+        echo "Backup \"${backupName}\" created successfully!"
+        exit 0
+    else
+        { printError "Could not create backup \"${backupName}\""; exit 1; }
+    fi
+}
 
 # Restore backup.
-if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                       # Extract the contents of the backup.
+
+"${restoreOption}" && {
     echo "Restoring backup \"${pathToBackup}\"..."
-    { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}" && echo "Backup restored successfully!"; }
-else
-    { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
-fi
+
+    if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
+        if { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}"; }; then
+            echo "Backup restored successfully!"
+        else
+            { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
+        fi
+    else
+        { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
+    fi
+}

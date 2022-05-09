@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+#############################
+# Author: Alejandro Cervera #
+# Date: 23/01/2022          #
+#############################
+usage() {
+    tee << EOF
+Description: Batch file rename script
+Usage: vatcher <PATTERN> <STRING> <FILES>
+
+Example:
+
+vatcher FILE file FILE1 FILE2
+
+In such example vatcher will rename FILE1 and FILE2 to file1 and file2 (respectively) by substituting the pattern "FILE" with "file".
+
+Note:
+
+If the pattern uses wildcards/globs ([], [^], *, ?, etc.), single quote it to prevent errors with your shell.
+EOF
+}
+
+printError() {
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+if [[ $# -eq 0 ]]; then
+    { printError "No arguments\n"; usage; exit 1; }
+elif [[ $# -lt 4 ]]; then
+    { printError "Insufficient arguments\n"; usage; exit 1; }
+fi
+
+# Arguments.
+PATTERN="$1" STRING="$2"
+
+# Rename the files.
+shift 2
+
+for ARGUMENT in "$@"; do
+    parentDirectory="$(dirname "${ARGUMENT}")"
+
+    if [[ ! -f "${ARGUMENT}" ]]; then
+        printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
+        continue
+    elif [[ ! -w "${ARGUMENT}" ]]; then
+        printError "Can not rename \"${ARGUMENT}\", it does not have write permission."
+        continue
+    elif [[ ! -x "${parentDirectory}" ]]; then                                                                      # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
+        printError "Can not rename \"${ARGUMENT}\", the directory it is contained in can not be accessed."
+        continue
+    elif ! mv -i "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}"; then
+        printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
+    fi
+done

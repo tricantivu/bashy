@@ -4,14 +4,14 @@
 # Author: Alejandro Cervera #
 # Date: 21/12/2021          #
 #############################
-usage(){
+usage() {
     tee << EOF
 Description: Empty one or more program's cache and delete old log files.
 Usage: ambystoma <DIRECTORY>
 EOF
 }
 
-printError(){
+printError() {
     printf '%b\n' "ERROR: $1" >&2
 }
 
@@ -21,12 +21,17 @@ readonly CACHE_DIR="${HOME}/.cache" LOG_DIR='/var/log'
 [[ $# -eq 0 ]] && { printError "No arguments were given!\n"; usage; exit 1; }
 
 for ARGUMENT in "$@"; do
-    if [[ -z "$(find "${CACHE_DIR}" -type d -name "${ARGUMENT##*/}")" ]]; then                   # Check if the argument is a subdirectory of ~/.cache.     Credits to: Alex Shearn (https://serverfault.com/users/230046/shearn89) for the answer in https://serverfault.com/a/768042
+    directoryBasename="${ARGUMENT##*/}"
+
+    if [[ ! -d "${CACHE_DIR}/${directoryBasename}" ]]; then                                      # Check if the argument is a subdirectory of ~/.cache.
         printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
         continue
+    elif ! find "${CACHE_DIR}/${directoryBasename}" | sed '1d' | grep '.'; then
+        printError "${ARGUMENT} is empty, nothing to delete."
+        continue
     else
-        rm -ri "${ARGUMENT}"/*                                                                   # Empty directory interactively.
+        rm -ri "${ARGUMENT}"/*
     fi
 done
 
-{ echo "Deleting log files..."; sudo find "${LOG_DIR}" -type f -iname "*.old" -delete; }         # Delete log files.
+{ echo "Deleting log files..."; sudo find "${LOG_DIR}" -type f -iname "*.old" -delete; }

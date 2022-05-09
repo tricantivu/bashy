@@ -1,13 +1,30 @@
 #!/usr/bin/env bash
 
-#############################
-# Author: Alejandro Cervera #
-# Date: 25/12/2021          #
-#############################
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+# Functions
+printError() {
+    printf '%b\n' "$1" >&2
+}
+
+# Constants
 readonly LIGHT_GREEN="\e[92m" LIGHT_RED="\e[91m" NORMAL="\e[0m"
 
-# Exit the script unsuccessfully if it's interrupted.
-trap 'echo Script was interrupted!; exit 1' SIGINT
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check for non-system accounts without a password.
 echo "Checking accounts..."
@@ -30,33 +47,27 @@ while read -r userAccount; do
 done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
 
 # Check for package updates and apply them if any are available.
-printf '\n%s\n' "What type of distribution are you using:"
+printf '%b\n' "\nWhat type of distribution are you using:"
 
 select distributionType in "Arch based" "Debian based" "RHEL based"; do
     case "${distributionType}" in
         ('Arch based')
-            sudo pacman --noconfirm --color always -Syu
+            sudo pacman --noconfirm --color always -Syu 2>&-
             break
         ;;
         ('Debian based')
-            { printf '\n%s\n\n' "Searching for updates..."; sudo apt-get -y update; }
-            if [[ "$(apt list --upgradable 2>&- | sed '1d' | wc -l)" -eq 0 ]]; then                                 # Gets a count of upgradable packages.
-                printf '\n%s\n' "No updates available!"
-                break
-            else
-                { printf '%s\n\n' "Updates are available, applying them now..."; sudo apt-get -y upgrade; }
-                break
-            fi
+            { sudo apt-get -y upgrade && sudo apt-get -y update; } 2>&-
+            break
         ;;
         ('RHEL based')
-            sudo dnf -y up || sudo yum -y update
+            sudo dnf -y up 2>&- || sudo yum -y update 2>&-
             break
         ;;
     esac
 done
 
 # Show open ports.
-{ printf '\n%s\n' "Open ports:"; ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq; }
+{ printf '%b\n' "\nOpen ports:"; ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq; }
 
 # Show disk usage.
 { echo "Percentage of disk used in root (/) partition:"; df -h / | tail -1 | awk '{print $5}'; }

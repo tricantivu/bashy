@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+usage() {
+    cat << HERE
+Description: Show information of a process identifier.
+Usage: spi <OPTION> <PID>
+
+Available options:
+
+    -p PID
+        Show the information for process identifier PID.
+
+    -h
+        Show script usage.
+HERE
+}
+
+printError() {
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+# Parse options.
+optionCount=0
+
+while getopts ':p:h' OPTION; do
+    ((optionCount++))
+
+    case "${OPTION}" in
+        (p)
+            PID="${OPTARG}"
+        ;;
+        (h)
+            { usage; exit 0; }
+        ;;
+        (:)
+            { printError "-${OPTARG} option expected an argument.\n"; usage; exit 1; }
+        ;;
+        ('?')
+            { printError "Unknown option \"-${OPTARG}\".\n"; usage; exit 1; }
+        ;;
+    esac
+done
+
+# Validate option argument.
+[[ -d "/proc/${PID}" ]] || { printError "PID \"${PID}\" does not exist.\n"; usage; exit 1; }
+
+# Global variables.
+fileDescriptors="$(find "/proc/${PID}/fdinfo" -type f -printf '%f, ' 2>&-)"
+processCommand="$(tr '\0' ' ' < "/proc/${PID}/cmdline" 2>&-)"
+processStatus="$(cut -d ' ' -f 3 "/proc/${PID}/stat" 2>&-)"
+processName="$(grep '.' "/proc/${PID}/comm" 2>&-)"
+
+[[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
+
+# Get process status.
+case "${processStatus}" in
+    (R)
+        processStatus="running"
+    ;;
+    (S)
+        processStatus="sleeping"
+    ;;
+    (D)
+        processStatus="uninterruptible sleep"
+    ;;
+    (Z)
+        processStatus='zombie'
+    ;;
+    (T)
+        processStatus="stopped"
+    ;;
+    (*)
+        processStatus="could not be detected"
+    ;;
+esac
+
+# Show PID information.
+cat << INFO
+PID ${PID} information:
+
+Process: ${processName}
+Status: ${processStatus^}
+Command line: ${processCommand%% }
+Open file descriptors: ${fileDescriptors%, }
+INFO

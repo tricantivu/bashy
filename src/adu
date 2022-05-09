@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+# Functions
+usage() {
+    cat << HERE
+Description: user(add|del) wrapper script to add or delete multiple users.
+Usage: adu <OPERATION> <USER>...
+
+Operations:
+
+    add <USER>
+        Add user <USER>.
+
+    delete <USER>
+        Delete user <USER>.
+
+    help
+        Show script usage.
+HERE
+}
+
+showError() {
+    printf '%b\n' "ERROR: $1" >&2
+}
+
+# Constants
+readonly USERNAME_MAX_LENGTH=32 USERNAME_REGEX='^[a-z_][a-z0-9_-]*[$]?$'                                                                                                    # Length value source: 'CAVEATS' section in useradd manual.
+
+[[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
+
+case "$1" in
+    ('add')
+        shift
+
+        for ARGUMENT in "$@"; do
+            # Validate the username.
+            if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
+                showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
+                continue
+            elif [[ ! "${ARGUMENT}" =~ ${USERNAME_REGEX} ]]; then
+                showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
+                continue
+            else
+                # Add user.
+                sudo useradd --create-home "${ARGUMENT}" &> /dev/null
+            fi
+        done
+    ;;
+    ('delete')
+        shift
+
+        # Delete users.
+        for ARGUMENT in "$@"; do
+             if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
+                printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
+             else
+                showError "Could not delete user \"${ARGUMENT}\"."
+             fi
+        done
+    ;;
+    ('help')
+        { usage; exit 0; }
+    ;;
+    (*)
+        { showError "Invalid operation \"$1\".\n"; usage; exit 1; }
+    ;;
+esac

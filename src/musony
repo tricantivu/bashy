@@ -1,41 +1,82 @@
 #!/usr/bin/env bash
 
-#############################
-# Author: Alejandro Cervera #
-# Date: 05/02/2022          #
-#############################
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
 
 # Global variables
 readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
 # Functions
-welcomeMessage(){
+welcomeMessage() {
     printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
 }
 
-packageCount(){
-    local packageManagers=('apt' 'dnf' 'pacman')
-
-    for packageManager in "${packageManagers[@]}"; do
-        if which "${packageManager}" &> /dev/null; then                                                                                             # Credits to: ivanleoncz (https://stackoverflow.com/users/5780109) for the answer in https://stackoverflow.com/a/43880464
-            case "${packageManager}" in
-                (apt)
-                    printf 'Packages: %d\n' "$(apt list --installed 2> /dev/null | wc -l)"
-                ;;
-                (dnf)
-                    printf 'Packages: %d\n' "$(dnf list --installed | wc -l)"
-                ;;
-                (pacman)
-                    printf 'Packages: %d\n' "$(pacman -Q | wc -l)"
-                ;;
-            esac
-        else
-            continue
-        fi
-    done
+debianCount() {
+    echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                                      # Silence warnings/errors in apt.
 }
 
-getDistribution(){
+fedoraCount() {
+    echo -n "Packages: "; wc -l < <(dnf list --installed) || \
+    echo -n "Packages: "; wc -l < <(yum list --installed)                                                                                           # Fallback to yum
+}
+
+archCount() {
+    echo -n "Packages: "; wc -l < <(pacman -Qq)
+}
+
+packageCount() {
+    . /etc/os-release
+
+    # Detect distribution.
+    if [[ -n "${ID_LIKE}" ]]; then
+        # Attempt detecting distribution by seeing what distributions are related.
+        case "${ID_LIKE}" in
+            (*arch*)
+                archCount
+            ;;
+            (*fedora*)
+                fedoraCount
+            ;;
+            (*debian*)
+                debianCount
+            ;;
+            (*)
+                echo "Could not get package count."
+            ;;
+        esac
+    else
+        # If the attempt fails, check the identifier set by vendors.
+        case "${ID}" in
+            (arch)
+                archCount
+            ;;
+            (fedora)
+                fedoraCount
+            ;;
+            (debian)
+                debianCount
+            ;;
+            (*)
+                echo "Could not get package count."
+            ;;
+        esac
+    fi
+}
+
+getDistribution() {
     local distributionName
 
     distributionName="$(lsb_release -ds)"
@@ -43,11 +84,30 @@ getDistribution(){
     printf "%s\n" "Distribution: ${distributionName//\"/}"
 }
 
-getShell(){
-    printf "%s\n" "Shell: ${SHELL#/*/}"
+getShell() {
+    printf "%s\n" "Shell: ${SHELL##*/}"
+}
+
+osInfo() {
+    local operatingSystem kernelRelease
+
+    # Parse OS name.
+    case "${OSTYPE}" in
+        (linux-gnu)
+            operatingSystem='GNU/Linux'
+        ;;
+        (*)
+            operatingSystem="${OSTYPE}"
+        ;;
+    esac
+
+    kernelRelease="$(uname -r)"
+
+    printf "%s\n" "OS: ${operatingSystem}" "Kernel: ${kernelRelease}" "Architecture: ${HOSTTYPE}"
 }
 
 welcomeMessage
 getShell
+osInfo
 packageCount
 getDistribution

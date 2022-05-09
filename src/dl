@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+# Functions
+usage() {
+    cat << HERE
+Description: youtube-dl wrapper script that reads URLs to download from standard input.
+Usage: dl <OPTION> <ARGUMENT>
+
+Available options:
+
+    -a
+        Convert downloaded files to an audio format.
+
+    -d DIRECTORY
+        Save files in a directory, defaults to /tmp if not specified.
+
+    -h
+        Show script usage.
+
+Examples:
+
+dl -a -d ~/Downloads
+dl -d ~/Videos
+dl -a
+
+HERE
+}
+
+showError() {
+    printf '%b\n' "$1" >&2
+}
+
+download() {
+    local failedDownloads=0 URLs
+
+    printf '%s\n\n' "Type the URL(s) to download press Control + D when finished."
+
+    mapfile -t URLs
+
+    [[ ${#URLs[@]} -eq 0 ]] && { showError "No URL(s) to download."; exit 1; }
+
+    printf '%b\n' "\nDownloading has begun, please be patient...\n"
+
+    for URL in "${URLs[@]}"; do
+        if [[ -z "${URL}" ]]; then
+            continue
+        elif youtube-dl $1 --quiet --no-warnings --no-part --exec "mv {} ${DIRECTORY}" "${URL}" 2> /dev/null; then
+            printf 'URL: %s\n' "\"${URL}\" downloaded successfully."
+        else
+            showError "URL: \"${URL}\" could not be downloaded."
+            ((failedDownloads++))
+            continue
+        fi
+    done
+
+    [[ ${#URLs[@]} -eq ${failedDownloads} ]] && { showError "\nNo URL(s) could be downloaded."; exit 1; }
+}
+
+readonly DEFAULT_DIR='/tmp'
+
+# Handle interrupts.
+trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
+
+# Parse options.
+optionCount=0
+
+while getopts ':ad:h' OPTION; do
+    ((optionCount++))
+
+    case "${OPTION}" in
+        (a)
+            convertToAudio='true'
+        ;;
+        (d)
+            DIRECTORY="${OPTARG}"
+        ;;
+        (h)
+            { usage; exit 0; }
+        ;;
+        ('?')
+            { showError "Illegal option -\"${OPTARG}\"."; exit 1; }
+        ;;
+    esac
+done
+
+[[ ${optionCount} -eq 0 ]] && { showError "No options were selected."; exit 1; }
+
+# Assign directory if it was not specified.
+DIRECTORY="${DIRECTORY:-$DEFAULT_DIR}"
+
+# Validate directory.
+[[ -e "${DIRECTORY}" ]] || { showError "Can not save downloads in directory \"${DIRECTORY}\" it does not exist."; exit 1; }
+[[ -d "${DIRECTORY}" ]] || { showError "Can not save downloads in \"${DIRECTORY}\" it is not a directory."; exit 1; }
+[[ -w "${DIRECTORY}" ]] || { showError "Can not save downloads in \"${DIRECTORY}\" it does not have write permissions."; exit 1; }
+
+# Download URLs.
+if [[ ${convertToAudio} ]]; then
+    download '--extract-audio'
+else
+    download
+fi
+
+# Remove traps
+trap &> /dev/null
