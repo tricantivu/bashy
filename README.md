@@ -15,6 +15,10 @@ Collection of shell scripts.
 
 [scrot](https://github.com/dreamer/scrot)
 
+[feh](https://feh.finalrewind.org)
+
+[youtube-dl](https://github.com/ytdl-org/youtube-dl)
+
 
 # Installation instructions
 0. Open a terminal window.
