@@ -31,8 +31,10 @@ HERE
 }
 
 printError() {
-    printf '%b\n' "ERROR: $1" >&2
+    printf '%b\n' "$1" >&2
 }
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
 optionCount=0
@@ -98,3 +100,5 @@ Status: ${processStatus^}
 Command line: ${processCommand%% }
 Open file descriptors: ${fileDescriptors%, }
 INFO
+
+trap &> /dev/null

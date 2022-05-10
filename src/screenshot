@@ -15,8 +15,10 @@ HERE
 }
 
 printError() {
-    printf '%b\n' "ERROR: $1" >&2
+    printf '%b\n' "$1" >&2
 }
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Constants
 readonly IMPERIAL_RED='#ED2939'
@@ -47,3 +49,5 @@ case "$1" in
         { printError "Invalid mode \"$1\".\n"; usage; exit 1; }
     ;;
 esac
+
+trap &> /dev/null

@@ -21,6 +21,8 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+
 feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 
 [[ $# -eq 0 ]] && { printError "No feeds to add.\n" >&2; usage; exit 1; }
@@ -32,3 +34,5 @@ if [[ -s "${feedsFile}" ]]; then
 else
     echo "${feeds// /$'\n'}" > "${feedsFile}"
 fi
+
+trap &> /dev/null

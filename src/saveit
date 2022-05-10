@@ -36,6 +36,8 @@ checkRunning() {
     done
 }
 
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
@@ -105,3 +107,5 @@ checkRunning 'calcurse' 'newsboat'
         { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
     fi
 }
+
+trap &> /dev/null

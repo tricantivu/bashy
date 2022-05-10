@@ -22,8 +22,10 @@ EOF
 }
 
 printError() {
-    printf '%b\n' "ERROR: $1" >&2
+    printf '%b\n' "$1" >&2
 }
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 if [[ $# -eq 0 ]]; then
     { printError "No arguments\n"; usage; exit 1; }
@@ -53,3 +55,5 @@ for ARGUMENT in "$@"; do
         printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
     fi
 done
+
+trap &> /dev/null
