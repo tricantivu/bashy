@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-which pamac &> /dev/null || { echo 'ERROR: pamac is not installed!' >&2; exit 1; }
+printError() {
+    printf '%b\n' "$1" >&2
+}
+
+which pamac &> /dev/null || { printError 'pamac is not installed!' >&2; exit 1; }
 
 pamac checkupdates --aur 1>&-
 

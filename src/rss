@@ -17,9 +17,13 @@ rss "https://news.ycombinator.com/rss"
 USAGE
 }
 
+printError() {
+    printf '%b\n' "$1" >&2
+}
+
 feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 
-[[ $# -eq 0 ]] && { printf 'ERROR! %b\n' "No feeds to add.\n" >&2; usage; exit 1; }
+[[ $# -eq 0 ]] && { printError "No feeds to add.\n" >&2; usage; exit 1; }
 
 [[ -e "${feedsFile}" ]] || echo "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
 
