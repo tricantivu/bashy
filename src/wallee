@@ -30,6 +30,8 @@ printError() {
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
+shopt -s extglob
+
 case "$1" in
     (-d | -dir | --directory)
         shift
@@ -39,7 +41,7 @@ case "$1" in
     (-h | -help | --help)
         { usage; exit 0; }
     ;;
-    ('')
+    (+([[:blank:]]) | '')
         { printError "No option selected."; exit 1; }
     ;;
     (*)

@@ -46,6 +46,8 @@ readonly USERNAME_MAX_LENGTH=32 USERNAME_REGEX='^[a-z_][a-z0-9_-]*[$]?$'        
 
 [[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
 
+shopt -s extglob
+
 case "$1" in
     ('add')
         shift
@@ -78,6 +80,9 @@ case "$1" in
     ;;
     ('help')
         { usage; exit 0; }
+    ;;
+    (+([[:blank:]]) | '')
+        { showError "No operation was specified."; exit 1; }
     ;;
     (*)
         { showError "Invalid operation \"$1\".\n"; usage; exit 1; }

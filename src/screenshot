@@ -31,6 +31,8 @@ elif [[ $# -gt 1 ]]; then
 fi
 
 # Validate mode.
+shopt -s extglob
+
 case "$1" in
     (help)
         { usage; exit 0; }
@@ -44,6 +46,9 @@ case "$1" in
         scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Could not take screenshot.'; exit 1; }
 
         notify-send 'Screenshot taken!'
+    ;;
+    (+([[:blank:]]) | '')
+        { printError "No mode was selected."; exit 1; }
     ;;
     (*)
         { printError "Invalid mode \"$1\".\n"; usage; exit 1; }
