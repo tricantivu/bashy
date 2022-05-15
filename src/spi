@@ -34,6 +34,33 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
+processName() {
+    local name=''
+
+    while read -r name; do
+        printf '%s\n' "${name}"
+    done < <(cat "/proc/${PID}/comm")
+}
+
+processStatus() {
+    local fileLine
+
+    while read -r fileLine; do
+        [[ "${fileLine}" == State:* ]] && {
+            # Parse the status.
+            prefixRemoved="${fileLine#State:}"
+            tabRemoved="${prefixRemoved##$'\t'}"
+            letterRemoved="${tabRemoved#[RSDZTtWXxKP]' '}"
+            parenthesisRemoved="${letterRemoved//[()]/}"
+
+            printf '%s\n' "${parenthesisRemoved^}"
+
+            break
+        }
+
+    done < <(cat "/proc/${PID}/status")
+}
+
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
@@ -64,39 +91,15 @@ done
 # Global variables.
 fileDescriptors="$(find "/proc/${PID}/fdinfo" -type f -printf '%f, ' 2>&-)"
 processCommand="$(tr '\0' ' ' < "/proc/${PID}/cmdline" 2>&-)"
-processStatus="$(cut -d ' ' -f 3 "/proc/${PID}/stat" 2>&-)"
-processName="$(grep '.' "/proc/${PID}/comm" 2>&-)"
 
 [[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
-
-# Get process status.
-case "${processStatus}" in
-    (R)
-        processStatus="running"
-    ;;
-    (S)
-        processStatus="sleeping"
-    ;;
-    (D)
-        processStatus="uninterruptible sleep"
-    ;;
-    (Z)
-        processStatus='zombie'
-    ;;
-    (T)
-        processStatus="stopped"
-    ;;
-    (*)
-        processStatus="could not be detected"
-    ;;
-esac
 
 # Show PID information.
 cat << INFO
 PID ${PID} information:
 
-Process: ${processName}
-Status: ${processStatus^}
+Process: $(processName)
+Status: $(processStatus)
 Command line: ${processCommand%% }
 Open file descriptors: ${fileDescriptors%, }
 INFO
