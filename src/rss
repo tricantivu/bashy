@@ -4,6 +4,8 @@
 # Author: Alejandro Cervera #
 # Date: 12/02/2022          #
 #############################
+
+# Functions
 usage() {
     cat << USAGE
 Description: Add multiple feeds to Newsboat
@@ -21,12 +23,12 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
-
+# Global variables.
 feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 
-[[ $# -eq 0 ]] && { printError "No feeds to add.\n" >&2; usage; exit 1; }
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
+[[ $# -eq 0 ]] && { printError "No feeds to add.\n" >&2; usage; exit 1; }
 [[ -e "${feedsFile}" ]] || echo "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
 
 if [[ -s "${feedsFile}" ]]; then

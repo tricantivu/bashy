@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+# Functions
 usage() {
    tee << HERE
 Description: scrot wrapper script.
@@ -18,10 +20,9 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
-
-# Constants
 readonly IMPERIAL_RED='#ED2939'
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check that the user chooses only one mode.
 if [[ $# -eq 0 ]]; then

@@ -39,10 +39,10 @@ showError() {
     printf '%b\n' "$1" >&2
 }
 
-trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
-
 # Constants
 readonly USERNAME_MAX_LENGTH=32 USERNAME_REGEX='^[a-z_][a-z0-9_-]*[$]?$'                                                                                                    # Length value source: 'CAVEATS' section in useradd manual.
+
+trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
 

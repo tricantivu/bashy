@@ -4,6 +4,8 @@
 # Author: Alejandro Cervera #
 # Date: 22/01/2022          #
 #############################
+
+# Functions
 usage() {
     local scriptName="${0##*/}"
 

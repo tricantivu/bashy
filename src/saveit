@@ -5,6 +5,7 @@
 # Date: 14/02/22            #
 #############################
 
+# Functions
 usage() {
     tee << EOF
 Usage: saveit <OPTION> <ARGUMENT>
@@ -36,10 +37,10 @@ checkRunning() {
     done
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
-
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check dependencies.
 which calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }

@@ -4,6 +4,8 @@
 # Author: Alejandro Cervera #
 # Date: 23/01/2022          #
 #############################
+
+# Functions
 usage() {
     tee << EOF
 Description: Batch file rename script

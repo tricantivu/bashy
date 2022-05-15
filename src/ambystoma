@@ -4,6 +4,8 @@
 # Author: Alejandro Cervera #
 # Date: 21/12/2021          #
 #############################
+
+# Functions
 usage() {
     tee << EOF
 Description: Empty one or more program's ~/.cache directory.
@@ -15,10 +17,9 @@ printError() {
     printf '%b\n' "$1" >&2
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
-
-# Constants
 readonly CACHE_DIR="${HOME}/.cache"
+
+trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && { printError "No arguments were given!\n"; usage; exit 1; }
 

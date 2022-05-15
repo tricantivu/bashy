@@ -74,7 +74,6 @@ download() {
 
 readonly DEFAULT_DIR='/tmp'
 
-# Handle interrupts.
 trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
