@@ -6,7 +6,7 @@
 #############################
 usage() {
     tee << EOF
-Description: Empty one or more program's cache and delete old log files.
+Description: Empty one or more program's ~/.cache directory.
 Usage: ambystoma <DIRECTORY>
 EOF
 }
@@ -18,7 +18,7 @@ printError() {
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Constants
-readonly CACHE_DIR="${HOME}/.cache" LOG_DIR='/var/log'
+readonly CACHE_DIR="${HOME}/.cache"
 
 [[ $# -eq 0 ]] && { printError "No arguments were given!\n"; usage; exit 1; }
 
@@ -35,7 +35,5 @@ for ARGUMENT in "$@"; do
         rm -ri "${ARGUMENT}"/*
     fi
 done
-
-{ echo "Deleting log files..."; sudo find "${LOG_DIR}" -type f -iname "*.old" -delete; }
 
 trap &> /dev/null
