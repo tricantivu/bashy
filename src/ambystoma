@@ -25,10 +25,10 @@ readonly CACHE_DIR="${HOME}/.cache" LOG_DIR='/var/log'
 for ARGUMENT in "$@"; do
     directoryBasename="${ARGUMENT##*/}"
 
-    if [[ ! -d "${CACHE_DIR}/${directoryBasename}" ]]; then                                      # Check if the argument is a subdirectory of ~/.cache.
+    if [[ ! -d "${CACHE_DIR}/${directoryBasename}" ]]; then
         printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
         continue
-    elif ! find "${CACHE_DIR}/${directoryBasename}" | sed '1d' | grep '.'; then
+    elif ! find "${CACHE_DIR}/${directoryBasename}" | grep -qvx "${CACHE_DIR}/${directoryBasename}"; then
         printError "${ARGUMENT} is empty, nothing to delete."
         continue
     else
