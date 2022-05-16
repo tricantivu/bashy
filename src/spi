@@ -102,10 +102,10 @@ while getopts ':p:h' OPTION; do
     esac
 done
 
+[[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
+
 # Validate option argument.
 [[ -d "/proc/${PID}" ]] || { printError "PID \"${PID}\" does not exist.\n"; usage; exit 1; }
-
-[[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
 
 # Show PID information.
 printf "PID ${PID} information:\n\n"
