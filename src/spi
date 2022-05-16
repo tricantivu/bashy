@@ -39,7 +39,7 @@ processName() {
     local name=''
 
     while read -r name; do
-        printf '%s\n' "${name}"
+        printf 'Process: %s\n' "${name}"
     done < <(cat "/proc/${PID}/comm")
 }
 
@@ -54,12 +54,28 @@ processStatus() {
             letterRemoved="${tabRemoved#[RSDZTtWXxKP]' '}"
             parenthesisRemoved="${letterRemoved//[()]/}"
 
-            printf '%s\n' "${parenthesisRemoved^}"
+            printf 'Status: %s\n' "${parenthesisRemoved^}"
 
             break
         }
 
     done < <(cat "/proc/${PID}/status")
+}
+
+processFDs() {
+    local fileDescriptors
+
+    fileDescriptors="$(find "/proc/${PID}/fdinfo" -type f -printf '%f, ' 2>&-)"
+
+    printf 'Open file descriptors: %s\n' "${fileDescriptors%, }"
+}
+
+processCommand() {
+    local processCommand
+
+    processCommand="$(tr '\0' ' ' < "/proc/${PID}/cmdline" 2>&-)"
+
+    printf 'Command line: %s\n' "${processCommand%% }"
 }
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
@@ -89,20 +105,14 @@ done
 # Validate option argument.
 [[ -d "/proc/${PID}" ]] || { printError "PID \"${PID}\" does not exist.\n"; usage; exit 1; }
 
-# Global variables.
-fileDescriptors="$(find "/proc/${PID}/fdinfo" -type f -printf '%f, ' 2>&-)"
-processCommand="$(tr '\0' ' ' < "/proc/${PID}/cmdline" 2>&-)"
-
 [[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
 
 # Show PID information.
-cat << INFO
-PID ${PID} information:
+printf "PID ${PID} information:\n\n"
 
-Process: $(processName)
-Status: $(processStatus)
-Command line: ${processCommand%% }
-Open file descriptors: ${fileDescriptors%, }
-INFO
+processName
+processStatus
+processCommand
+processFDs
 
 trap &> /dev/null
