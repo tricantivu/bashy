@@ -25,11 +25,12 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 for ARGUMENT in "$@"; do
     directoryBasename="${ARGUMENT##*/}"
+    cacheFullPath="${CACHE_DIR}/${directoryBasename}"
 
-    if [[ ! -d "${CACHE_DIR}/${directoryBasename}" ]]; then
+    if [[ ! -d "${cacheFullPath}" ]]; then
         printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
         continue
-    elif ! find "${CACHE_DIR}/${directoryBasename}" | grep -qvx "${CACHE_DIR}/${directoryBasename}"; then
+    elif ! find "${cacheFullPath}" | grep -qvx "${cacheFullPath}"; then
         printError "${ARGUMENT} is empty, nothing to delete."
         continue
     else
