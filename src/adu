@@ -87,17 +87,12 @@ esac
 "${addOperation:-false}" && {
     shift
 
+    # Add users.
     for ARGUMENT in "$@"; do
-        # Validate the username.
-        if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
-            showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
-            continue
-        elif [[ ! "${ARGUMENT}" =~ ${USERNAME_REGEX} ]]; then
-            showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
-            continue
+        if sudo useradd --create-home "${ARGUMENT}" &> /dev/null; then
+            printf "Successfully added user %s.\n" "${ARGUMENT}"
         else
-            # Add user.
-            sudo useradd --create-home "${ARGUMENT}" &> /dev/null
+            showError "Could not add user \"${ARGUMENT}\"."
         fi
     done
 
