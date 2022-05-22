@@ -44,39 +44,17 @@ readonly USERNAME_MAX_LENGTH=32 USERNAME_REGEX='^[a-z_][a-z0-9_-]*[$]?$'        
 
 trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 
+# Parse arguments.
 [[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
 
 shopt -s extglob
 
 case "$1" in
     ('add')
-        shift
-
-        for ARGUMENT in "$@"; do
-            # Validate the username.
-            if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
-                showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
-                continue
-            elif [[ ! "${ARGUMENT}" =~ ${USERNAME_REGEX} ]]; then
-                showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
-                continue
-            else
-                # Add user.
-                sudo useradd --create-home "${ARGUMENT}" &> /dev/null
-            fi
-        done
+        addOperation='true'
     ;;
     ('delete')
-        shift
-
-        # Delete users.
-        for ARGUMENT in "$@"; do
-             if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
-                printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
-             else
-                showError "Could not delete user \"${ARGUMENT}\"."
-             fi
-        done
+        deleteOperation='true'
     ;;
     ('help')
         { usage; exit 0; }
@@ -88,5 +66,42 @@ case "$1" in
         { showError "Invalid operation \"$1\"."; usage; exit 1; }
     ;;
 esac
+
+# Manage users.
+"${deleteOperation:-false}" && {
+    shift
+
+    # Delete users.
+    for ARGUMENT in "$@"; do
+         if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
+            printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
+         else
+            showError "Could not delete user \"${ARGUMENT}\"."
+         fi
+    done
+
+    exit $?
+}
+
+
+"${addOperation:-false}" && {
+    shift
+
+    for ARGUMENT in "$@"; do
+        # Validate the username.
+        if [[ ${#ARGUMENT} -gt ${USERNAME_MAX_LENGTH} ]]; then
+            showError "Usernames can not be longer than ${USERNAME_MAX_LENGTH} characters."
+            continue
+        elif [[ ! "${ARGUMENT}" =~ ${USERNAME_REGEX} ]]; then
+            showError "Illegal characters found in ${ARGUMENT}'s username!"                                                                                             # Regex based from 'CAVEATS' section in useradd manual. I added the anchors to match only usernames that start and end with pattern.
+            continue
+        else
+            # Add user.
+            sudo useradd --create-home "${ARGUMENT}" &> /dev/null
+        fi
+    done
+
+    exit $?
+}
 
 trap &> /dev/null
