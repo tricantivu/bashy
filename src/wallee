@@ -26,7 +26,7 @@ USAGE
 }
 
 printError() {
-    printf '%b\n' "$1" >&2
+    printf "$1\n" >&2
 }
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT

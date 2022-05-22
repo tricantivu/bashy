@@ -43,7 +43,7 @@ HERE
 }
 
 showError() {
-    printf '%b\n' "$1" >&2
+    printf "$1\n" >&2
 }
 
 download() {

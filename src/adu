@@ -36,7 +36,7 @@ HERE
 }
 
 showError() {
-    printf '%b\n' "$1" >&2
+    printf "$1\n" >&2
 }
 
 # Constants
@@ -85,7 +85,7 @@ case "$1" in
         { showError "No operation was specified."; exit 1; }
     ;;
     (*)
-        { showError "Invalid operation \"$1\".\n"; usage; exit 1; }
+        { showError "Invalid operation \"$1\"."; usage; exit 1; }
     ;;
 esac
 
