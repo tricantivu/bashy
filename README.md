@@ -66,13 +66,13 @@ Collection of shell scripts.
 ![GIF5](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/chk4up.gif)
 
 
-* ambystoma - Clears the ~/.cache directory of one or more programs and deletes old log files.
+* ambystoma - Clears one or more ~/.cache directories.
 
 
 ![GIF6](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/ambystoma.gif)
 
 
-* musony - Shows some (shell, amount of installed packages and distribution name) system information.
+* musony - Shows some (shell, operating system, kernel, architecture, amount of installed packages, and distribution name) system information.
 
 
 ![GIF7](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/musony.gif)
