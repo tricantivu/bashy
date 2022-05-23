@@ -57,9 +57,6 @@ Collection of shell scripts.
 * schk - Performs a maintenance check for Arch/Debian/RHEL based distributions.
 
 
-![GIF4](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/schk.gif)
-
-
 * chk4up - pamac wrapper to check for updates in packages installed from the AUR.
 
 
@@ -69,10 +66,4 @@ Collection of shell scripts.
 * ambystoma - Clears one or more ~/.cache directories.
 
 
-![GIF6](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/ambystoma.gif)
-
-
 * musony - Shows some (shell, operating system, kernel, architecture, amount of installed packages, and distribution name) system information.
-
-
-![GIF7](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/musony.gif)
