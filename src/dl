@@ -18,9 +18,11 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     cat << HERE
-Description: youtube-dl wrapper script that reads URLs to download from standard input.
-Usage: dl <OPTION> <ARGUMENT>
+Description: youtube-${scriptName} wrapper script that reads URLs to download from standard input.
+Usage: ${scriptName} <OPTION> <ARGUMENT>
 
 Available options:
 
@@ -35,9 +37,9 @@ Available options:
 
 Examples:
 
-dl -a -d ~/Downloads
-dl -d ~/Videos
-dl -a
+${scriptName} -a -d ~/Downloads
+${scriptName} -d ~/Videos
+${scriptName} -a
 
 HERE
 }

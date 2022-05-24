@@ -7,15 +7,17 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     cat << USAGE
 Description: Add multiple feeds to Newsboat
-Usage: rss <URL>
+Usage: ${scriptName} <URL>
 
 Examples:
 
-rss "http://rss.cnn.com/rss/edition_world.rss" "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+${scriptName} "http://rss.cnn.com/rss/edition_world.rss" "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
 
-rss "https://news.ycombinator.com/rss"
+${scriptName} "https://news.ycombinator.com/rss"
 USAGE
 }
 

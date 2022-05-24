@@ -17,9 +17,11 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     cat << HERE
 Description: Show information of a process identifier.
-Usage: spi <OPTION> <PID>
+Usage: ${scriptName} <OPTION> <PID>
 
 Available options:
 

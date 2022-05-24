@@ -7,15 +7,17 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     tee << EOF
 Description: Batch file rename script
-Usage: vatcher <PATTERN> <STRING> <FILES>
+Usage: ${scriptName} <PATTERN> <STRING> <FILES>
 
 Example:
 
-vatcher FILE file FILE1 FILE2
+${scriptName} FILE file FILE1 FILE2
 
-In such example vatcher will rename FILE1 and FILE2 to file1 and file2 (respectively) by substituting the pattern "FILE" with "file".
+In such example ${scriptName} will rename FILE1 and FILE2 to file1 and file2 (respectively) by substituting the pattern "FILE" with "file".
 
 Note:
 

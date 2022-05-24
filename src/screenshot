@@ -2,9 +2,11 @@
 
 # Functions
 usage() {
+   local scriptName="${0##*/}"
+
    tee << HERE
 Description: scrot wrapper script.
-Usage: screenshot <MODE>
+Usage: ${scriptName} <MODE>
 
 Modes:
 

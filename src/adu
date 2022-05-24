@@ -18,9 +18,11 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     cat << HERE
 Description: user(add|del) wrapper script to add or delete multiple users.
-Usage: adu <OPERATION> <USER>...
+Usage: ${scriptName} <OPERATION> <USER>...
 
 Operations:
 

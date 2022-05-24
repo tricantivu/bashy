@@ -7,9 +7,11 @@
 
 # Functions
 usage() {
+    local scriptName="${0##*/}"
+
     tee << EOF
 Description: Empty one or more program's ~/.cache directory.
-Usage: ambystoma <DIRECTORY>
+Usage: ${scriptName} <DIRECTORY>
 EOF
 }
 
