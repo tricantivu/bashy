@@ -66,11 +66,9 @@ select distributionType in "Arch based" "Debian based" "RHEL based"; do
     esac
 done
 
-# Show open ports.
 printf '%b\n' "\nOpen ports:"; {
 
     ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq
 }
 
-# Show disk usage.
-{ echo "Percentage of disk used in root (/) partition:"; df -h / | tail -1 | awk '{print $5}'; }
+{ echo "Disk used:"; df -h / | tail -1 | awk '{print $5}'; }
