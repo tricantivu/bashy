@@ -67,10 +67,9 @@ case "$1" in
 esac
 
 # Manage users.
-"${deleteOperation:-false}" && {
-    shift
+shift
 
-    # Delete users.
+"${deleteOperation:-false}" && {
     for ARGUMENT in "$@"; do
          if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
             printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
@@ -84,9 +83,6 @@ esac
 
 
 "${addOperation:-false}" && {
-    shift
-
-    # Add users.
     for ARGUMENT in "$@"; do
         if sudo useradd --create-home "${ARGUMENT}" &> /dev/null; then
             printf "Successfully added user %s.\n" "${ARGUMENT}"
