@@ -59,7 +59,7 @@ select distributionType in "Arch based" "Debian based" "RHEL based"; do
             break
         ;;
         ('Debian based')
-            { sudo apt-get -y upgrade && sudo apt-get -y update; } 2>&-
+            { sudo apt-get -y update && sudo apt-get -y upgrade; } 2>&-
             break
         ;;
         ('RHEL based')
