@@ -21,7 +21,7 @@ usage() {
     local scriptName="${0##*/}"
 
     cat << HERE
-Description: youtube-${scriptName} wrapper script that reads URLs to download from standard input.
+Description: youtube-dl wrapper script that reads URLs to download from standard input.
 Usage: ${scriptName} <OPTION> <ARGUMENT>
 
 Available options:
