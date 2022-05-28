@@ -11,7 +11,7 @@ usage() {
 
     tee << EOF
 Description: Empty one or more program's ~/.cache directory.
-Usage: ${scriptName} <DIRECTORY>
+Usage: ${scriptName} <NAME>
 EOF
 }
 
@@ -26,8 +26,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 [[ $# -eq 0 ]] && { printError "No arguments were given!\n"; usage; exit 1; }
 
 for ARGUMENT in "$@"; do
-    directoryBasename="${ARGUMENT##*/}"
-    cacheFullPath="${CACHE_DIR}/${directoryBasename}"
+    cacheFullPath="${CACHE_DIR}/${ARGUMENT##*/}"
 
     [[ -e "${cacheFullPath}" ]] || {
        printError "${ARGUMENT} can not be emptied, it does not exist."
@@ -44,7 +43,7 @@ for ARGUMENT in "$@"; do
        continue
     }
 
-    rm -ri "${ARGUMENT}"/*
+    rm -ri "${cacheFullPath}"/*
 done
 
 trap &> /dev/null
