@@ -44,7 +44,7 @@ for ARGUMENT in "$@"; do
        continue
     }
 
-       rm -ri "${ARGUMENT}"/*
+    rm -ri "${ARGUMENT}"/*
 done
 
 trap &> /dev/null
