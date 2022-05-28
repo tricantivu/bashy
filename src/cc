@@ -29,7 +29,10 @@ for ARGUMENT in "$@"; do
     directoryBasename="${ARGUMENT##*/}"
     cacheFullPath="${CACHE_DIR}/${directoryBasename}"
 
-    if [[ ! -d "${cacheFullPath}" ]]; then
+    if [[ ! -e "${cacheFullPath}" ]]; then
+        printError "${ARGUMENT} can not be emptied, it does not exist."
+        continue
+    elif [[ ! -d "${cacheFullPath}" ]]; then
         printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
         continue
     elif ! find "${cacheFullPath}" | grep -qvx "${cacheFullPath}"; then
