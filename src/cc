@@ -38,7 +38,7 @@ for ARGUMENT in "$@"; do
        continue
     }
 
-    find "${cacheFullPath}" | grep -qvx "${cacheFullPath}" && {
+    find "${cacheFullPath}" | grep -qvx "${cacheFullPath}" || {
        printError "${ARGUMENT} is empty, nothing to delete."
        continue
     }
