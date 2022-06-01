@@ -9,7 +9,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    tee << EOF
+    cat << EOF
 Description: Batch file rename script
 Usage: ${scriptName} <PATTERN> <STRING> <FILES>
 

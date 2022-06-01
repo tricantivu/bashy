@@ -4,7 +4,7 @@
 usage() {
    local scriptName="${0##*/}"
 
-   tee << HERE
+   cat << HERE
 Description: scrot wrapper script.
 Usage: ${scriptName} <MODE>
 
