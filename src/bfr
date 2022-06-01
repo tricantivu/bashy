@@ -9,7 +9,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << EOF
+cat << USAGE
 Description: Batch file rename script
 Usage: ${scriptName} <PATTERN> <STRING> <FILES>
 
@@ -22,7 +22,7 @@ In such example ${scriptName} will rename FILE1 and FILE2 to file1 and file2 (re
 Note:
 
 If the pattern uses wildcards/globs ([], [^], *, ?, etc.), single quote it to prevent errors with your shell.
-EOF
+USAGE
 }
 
 printError() {

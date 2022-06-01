@@ -9,7 +9,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << USAGE
+cat << USAGE
 Description: Add multiple feeds to Newsboat
 Usage: ${scriptName} <URL>
 

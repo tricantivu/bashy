@@ -9,10 +9,10 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << EOF
+cat << USAGE
 Description: Empty one or more program's ~/.cache directory.
 Usage: ${scriptName} <NAME>
-EOF
+USAGE
 }
 
 printError() {

@@ -20,7 +20,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << HERE
+cat << USAGE
 Description: youtube-dl wrapper script that reads URLs to download from standard input.
 Usage: ${scriptName} <OPTION> <ARGUMENT>
 
@@ -41,7 +41,7 @@ ${scriptName} -a -d ~/Downloads
 ${scriptName} -d ~/Videos
 ${scriptName} -a
 
-HERE
+USAGE
 }
 
 showError() {

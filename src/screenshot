@@ -4,7 +4,7 @@
 usage() {
    local scriptName="${0##*/}"
 
-   cat << HERE
+cat << USAGE
 Description: scrot wrapper script.
 Usage: ${scriptName} <MODE>
 
@@ -15,7 +15,7 @@ Modes:
     help    - Show script usage.
 
 The screenshot will be saved in the current working directory.
-HERE
+USAGE
 }
 
 printError() {

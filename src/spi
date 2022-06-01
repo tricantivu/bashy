@@ -19,7 +19,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << HERE
+cat << USAGE
 Description: Show information of a process identifier.
 Usage: ${scriptName} <OPTION> <PID>
 
@@ -30,7 +30,7 @@ Available options:
 
     -h
         Show script usage.
-HERE
+USAGE
 }
 
 printError() {

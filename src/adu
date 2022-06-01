@@ -20,7 +20,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << HERE
+cat << USAGE
 Description: user(add|del) wrapper script to add or delete multiple users.
 Usage: ${scriptName} <OPERATION> <USER>...
 
@@ -34,7 +34,7 @@ Operations:
 
     help
         Show script usage.
-HERE
+USAGE
 }
 
 showError() {

@@ -9,7 +9,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << EOF
+cat << USAGE
 Usage: ${scriptName} <OPTION> <ARGUMENT>
 Description: Backup and restore newsboat feeds and calcurse's data.
 
@@ -23,7 +23,7 @@ Options:
 
 -h
     Show script usage.
-EOF
+USAGE
 }
 
 printError() {
