@@ -54,7 +54,7 @@ packageCount() {
             debianCount
         ;;
         (*)
-            echo "Could not get package count."
+            echo "Packages: N/A"
         ;;
     esac
 }
