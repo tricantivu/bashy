@@ -67,7 +67,7 @@ processStatus() {
 processFDs() {
     local fileDescriptors
 
-    fileDescriptors="$(find "/proc/${PID}/fdinfo" -type f -printf '%f, ' 2>&-)"
+    fileDescriptors="$(find "/proc/${PID}/fd" -type l -printf '%f, ' 2>&-)"
 
     printf 'Open file descriptors: %s\n' "${fileDescriptors%, }"
 }
