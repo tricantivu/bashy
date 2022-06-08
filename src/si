@@ -43,39 +43,20 @@ packageCount() {
     . /etc/os-release
 
     # Detect distribution.
-    if [[ -n "${ID_LIKE}" ]]; then
-        # Attempt detecting distribution by seeing what distributions are related.
-        case "${ID_LIKE}" in
-            (*arch*)
-                archCount
-            ;;
-            (*fedora*)
-                fedoraCount
-            ;;
-            (*debian*)
-                debianCount
-            ;;
-            (*)
-                echo "Could not get package count."
-            ;;
-        esac
-    else
-        # If the attempt fails, check the identifier set by vendors.
-        case "${ID}" in
-            (arch)
-                archCount
-            ;;
-            (fedora)
-                fedoraCount
-            ;;
-            (debian)
-                debianCount
-            ;;
-            (*)
-                echo "Could not get package count."
-            ;;
-        esac
-    fi
+    case "${ID_LIKE:-$ID}" in
+        (arch)
+            archCount
+        ;;
+        (fedora)
+            fedoraCount
+        ;;
+        (debian)
+            debianCount
+        ;;
+        (*)
+            echo "Could not get package count."
+        ;;
+    esac
 }
 
 getDistribution() {
