@@ -25,6 +25,21 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && { printError "No arguments were given!\n"; usage; exit 1; }
 
+# Prompt user for a confirmation before deletion.
+shopt -s nocasematch extglob
+
+read -r -p 'Delete contents of subdirectories? [Y/N] '
+
+until [[ "${REPLY}" == @(Y|N|[[:blank:]]) ]]; do
+    read -r -p 'Invalid reply to prompt, try again. '
+done
+
+[[ "${REPLY}" == N ]] && {
+
+    exit 1
+}
+
+# Delete contents.
 for ARGUMENT in "$@"; do
     cacheFullPath="${CACHE_DIR}/${ARGUMENT##*/}"
 
@@ -43,7 +58,7 @@ for ARGUMENT in "$@"; do
         continue
     }
 
-    rm -ri "${cacheFullPath}"/*
+    rm -r "${cacheFullPath}"/*
 done
 
 trap &> /dev/null
