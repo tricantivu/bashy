@@ -58,7 +58,7 @@ for ARGUMENT in "$@"; do
         continue
     }
 
-    rm -r "${cacheFullPath}"/*
+    rm -r "${cacheFullPath}"/* &> /dev/null
 done
 
 trap &> /dev/null
