@@ -21,6 +21,8 @@ trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
 # Global variables
 readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
+. /etc/os-release
+
 # Functions
 welcomeMessage() {
     printf "%b\n\n" "${RED}System information for:${COLOR_END} ${YELLOW}${USER}${COLOR_END}${GREEN}@${COLOR_END}${BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
@@ -40,7 +42,6 @@ archCount() {
 }
 
 packageCount() {
-    . /etc/os-release
 
     # Detect distribution.
     case "${ID_LIKE:-$ID}" in
