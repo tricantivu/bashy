@@ -81,9 +81,9 @@ packageCount() {
 getDistribution() {
     local distributionName
 
-    distributionName="$(lsb_release -ds)"
+    distributionName="${PRETTY_NAME:-$NAME}"
 
-    printf "%s\n" "Distribution: ${distributionName//\"/}"
+    printf "%s\n" "Distribution: ${distributionName}"
 }
 
 getShell() {
