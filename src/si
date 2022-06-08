@@ -18,9 +18,10 @@
 
 trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
 
-# Global variables
+# Constants
 readonly RED="\e[31m" GREEN="\e[32m" YELLOW="\e[33m" BLUE="\e[34m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
+# Global variables
 . /etc/os-release
 
 # Functions
