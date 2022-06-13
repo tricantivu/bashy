@@ -54,7 +54,7 @@ Collection of shell scripts.
 ![GIF3](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/saveit.gif)
 
 
-* mchk - Performs a maintenance check for Arch/Debian/RHEL based distributions.
+* mchk - Show open ports, disk usage, checks for updates and user accounts without passwords for Arch/Debian/RHEL based distributions.
 
 
 * chk4up - pamac wrapper to check for updates in packages installed from the AUR.
