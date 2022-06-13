@@ -27,7 +27,7 @@ readonly LIGHT_GREEN="\e[92m" LIGHT_RED="\e[91m" NORMAL="\e[0m"
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check for non-system accounts without a password.
-echo "Checking accounts..."
+printf '%s\n' "Checking accounts..."
 
 while read -r userAccount; do
 
@@ -74,4 +74,4 @@ printf '%b\n' "\nOpen ports:"; {
     ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq
 }
 
-{ echo "Disk used:"; df -h / | tail -1 | awk '{print $5}'; }
+{ printf '%s\n' "Disk used:"; df -h / | tail -1 | awk '{print $5}'; }

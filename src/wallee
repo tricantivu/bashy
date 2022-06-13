@@ -78,7 +78,7 @@ esac
 
 # Set wallpaper.
 if feh --bg-scale --randomize "${wallpapersDirectory}"/*; then
-    echo "Wallpaper set successfully."
+    printf '%s\n' "Wallpaper set successfully."
 else
     { printError "Could not set wallpaper."; exit 1; }
 fi

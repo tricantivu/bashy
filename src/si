@@ -30,16 +30,16 @@ welcomeMessage() {
 }
 
 debianCount() {
-    echo -n "Packages: "; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                                      # Silence warnings/errors in apt.
+    printf 'Packages: '; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                                                            # Silence warnings/errors in apt.
 }
 
 fedoraCount() {
-    echo -n "Packages: "; wc -l < <(dnf list --installed) || \
-    echo -n "Packages: "; wc -l < <(yum list --installed)                                                                                           # Fallback to yum
+    printf 'Packages: '; wc -l < <(dnf list --installed) || \
+    printf 'Packages: '; wc -l < <(yum list --installed)                                                                                                                 # Fallback to yum
 }
 
 archCount() {
-    echo -n "Packages: "; wc -l < <(pacman -Qq)
+    printf 'Packages: '; wc -l < <(pacman -Qq)
 }
 
 packageCount() {
@@ -56,7 +56,7 @@ packageCount() {
             debianCount
         ;;
         (*)
-            echo "Packages: N/A"
+            printf '%s\n' "Packages: N/A"
         ;;
     esac
 }

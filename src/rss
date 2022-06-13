@@ -31,12 +31,12 @@ feedsFile="${HOME}/.newsboat/urls" feeds="$*"
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && { printError "No feeds to add.\n" >&2; usage; exit 1; }
-[[ -e "${feedsFile}" ]] || echo "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
+[[ -e "${feedsFile}" ]] || printf '%s\n' "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
 
 if [[ -s "${feedsFile}" ]]; then
-    echo "${feeds// /$'\n'}" >> "${feedsFile}"
+    printf '%s\n' "${feeds// /$'\n'}" >> "${feedsFile}"
 else
-    echo "${feeds// /$'\n'}" > "${feedsFile}"
+    printf '%s\n' "${feeds// /$'\n'}" > "${feedsFile}"
 fi
 
 trap &> /dev/null

@@ -43,6 +43,6 @@ for NUMBER in ${1//./ }; do
     [[ "${NUMBER}" -ge 0 && "${NUMBER}" -le 255 ]] || { printError "\"$1\" is not an IPv4 address."; exit 1; }
 done
 
-echo "$1 is an IPv4 address."
+printf '%s\n' "$1 is an IPv4 address."
 
 trap &> /dev/null
