@@ -47,27 +47,25 @@ while read -r userAccount; do
 done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
 
 # Check for package updates and apply them if any are available.
-printf '%b\n' "\nWhat type of distribution are you using:"
+. /etc/os-release
 
-select distributionType in "Arch based" "Debian based" "RHEL based"; do
-    printf '%b\n' "\nChecking for package updates...\n"
+printf '%b\n' "\nChecking for package updates...\n"
 
-    case "${distributionType}" in
-        ('Arch based')
+case "${ID_LIKE:-$ID}" in
+    (arch)
 
-            sudo pacman --noconfirm --color always -Syu 2>&-
-            break
-        ;;
-        ('Debian based')
-            { sudo apt-get -y update && sudo apt-get -y upgrade; } 2>&-
-            break
-        ;;
-        ('RHEL based')
-            sudo dnf -y up 2>&- || sudo yum -y update 2>&-
-            break
-        ;;
-    esac
-done
+        sudo pacman --noconfirm --color always -Syu 2>&-
+    ;;
+    (debian)
+        { sudo apt-get -y update && sudo apt-get -y upgrade; } 2>&-
+    ;;
+    (fedora)
+        sudo dnf -y up 2>&- || sudo yum -y update 2>&-
+    ;;
+    (*)
+        printError "Could not check for updates.\n"
+    ;;
+esac
 
 printf '%b\n' "\nOpen ports:"; {
 
