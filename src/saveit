@@ -45,7 +45,7 @@ newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check dependencies.
-which calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
+type -P calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
 
 # Parse options.
 optionCount=0

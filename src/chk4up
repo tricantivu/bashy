@@ -6,7 +6,7 @@ printError() {
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
-which pamac &> /dev/null || { printError 'pamac is not installed!' >&2; exit 1; }
+type -P pamac &> /dev/null || { printError 'pamac is not installed!' >&2; exit 1; }
 
 ping -c 3 manjaro.org &> /dev/null || {
     printError "Can not check for updates, please check your connection."
