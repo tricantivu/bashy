@@ -17,7 +17,16 @@ ping -c 3 manjaro.org &> /dev/null || {
 pamac checkupdates --aur 1>&-
 
 if [[ $? -eq 100 ]]; then
-    notify-send 'chk4up' "System updates are available!"
+    notify-send 'chk4up' "System updates are available, applying them!"
+
+    pamac upgrade --aur --no-confirm 1>&- || {
+
+        notify-send 'chk4up' "Updates could not be applied, pamac failed."
+
+        exit 1
+    }
+
+    notify-send 'chk4up' "Updates applied successfully!"
 else
     notify-send 'chk4up' "No system updates are available!"
 fi
