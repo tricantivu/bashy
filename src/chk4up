@@ -14,12 +14,12 @@ ping -c 3 manjaro.org &> /dev/null || {
     exit 1
 }
 
-pamac checkupdates --aur 1>&-
+pamac checkupdates --aur &> /dev/null
 
 if [[ $? -eq 100 ]]; then
     notify-send 'chk4up' "System updates are available, applying them!"
 
-    pamac upgrade --aur --no-confirm 1>&- || {
+    pamac upgrade --aur --no-confirm &> /dev/null || {
 
         notify-send 'chk4up' "Updates could not be applied, pamac failed."
 
