@@ -26,13 +26,13 @@ Usage: ${scriptName} <OPERATION> <USER>...
 
 Operations:
 
-    add <USER>
+    add, a <USER>
         Add user <USER>.
 
-    delete <USER>
+    delete, d <USER>
         Delete user <USER>.
 
-    help
+    help, h
         Show script usage.
 USAGE
 }
@@ -49,13 +49,13 @@ trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 shopt -s extglob
 
 case "$1" in
-    ('add')
+    (a?('dd'))
         addOperation='true'
     ;;
-    ('delete')
+    (d?('elete'))
         deleteOperation='true'
     ;;
-    ('help')
+    (h?('elp'))
         { usage; exit 0; }
     ;;
     (+([[:blank:]]) | '')

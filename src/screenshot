@@ -10,9 +10,9 @@ Usage: ${scriptName} <MODE>
 
 Modes:
 
-    normal  - Take a screenshot of the entire screen.
-    grab    - Select a part of a window and take a screenshot of it.
-    help    - Show script usage.
+    normal, n  - Take a screenshot of the entire screen.
+    grab, g    - Select a part of a window and take a screenshot of it.
+    help, h    - Show script usage.
 
 The screenshot will be saved in the current working directory.
 USAGE
@@ -37,15 +37,15 @@ fi
 shopt -s extglob
 
 case "$1" in
-    (help)
+    (h?(elp))
         { usage; exit 0; }
     ;;
-    (grab)
+    (g?(rab))
         scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Screenshot was aborted.'; exit 1; }
 
         notify-send 'Screenshot taken'
     ;;
-    (normal)
+    (n?(ormal))
         scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Could not take screenshot.'; exit 1; }
 
         notify-send 'Screenshot taken!'
