@@ -26,7 +26,7 @@ printError() {
 }
 
 # Global variables.
-feedsFile="${HOME}/.newsboat/urls" feeds="$*"
+feedsFile="${HOME}/.newsboat/urls" feedsToAdd="$*"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
@@ -34,9 +34,9 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 [[ -e "${feedsFile}" ]] || printf '%s\n' "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
 
 if [[ -s "${feedsFile}" ]]; then
-    printf '%s\n' "${feeds// /$'\n'}" >> "${feedsFile}"
+    printf '%s\n' "${feedsToAdd// /$'\n'}" >> "${feedsFile}"
 else
-    printf '%s\n' "${feeds// /$'\n'}" > "${feedsFile}"
+    printf '%s\n' "${feedsToAdd// /$'\n'}" > "${feedsFile}"
 fi
 
 trap &> /dev/null

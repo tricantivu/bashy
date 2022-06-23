@@ -18,8 +18,8 @@ Options:
 -b NAME
     Create a backup named NAME.
 
--r PATH
-    Restore backup in directory path PATH.
+-r NAME
+    Restore backup named NAME.
 
 -h
     Show script usage.
