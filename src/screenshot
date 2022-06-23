@@ -47,6 +47,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 # Validate mode.
 shopt -s extglob
 
+# shellcheck disable=SC2016
 case "$1" in
     (h?(elp))
         { usage; exit 0; }

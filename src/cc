@@ -64,6 +64,7 @@ for ARGUMENT in "$@"; do
         continue
     }
 
+    # shellcheck disable=SC2115
     rm -r -- "${cacheFullPath}"/* &> /dev/null
 done
 

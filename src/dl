@@ -63,6 +63,7 @@ download() {
     printf '%b\n' "\nDownloading has begun, please be patient...\n"
 
     for URL in "${URLs[@]}"; do
+        # shellcheck disable=SC2086
         if [[ -z "${URL}" ]]; then
             continue
         elif youtube-dl $1 --quiet --no-warnings --no-part --exec "mv -- {} ${DIRECTORY}" -- "${URL}" 2> /dev/null; then
