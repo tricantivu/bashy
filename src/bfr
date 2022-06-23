@@ -31,11 +31,22 @@ printError() {
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
-if [[ $# -eq 0 ]]; then
-    { printError "No arguments\n"; usage; exit 1; }
-elif [[ $# -lt 4 ]]; then
-    { printError "Insufficient arguments\n"; usage; exit 1; }
-fi
+[[ $# -eq 0 ]] && {
+    printError "No arguments\n"
+
+    usage
+
+    exit 1
+}
+
+[[ $# -lt 4 ]] && {
+    printError "Insufficient arguments\n"
+
+    usage
+
+    exit 1
+}
+
 
 # Arguments.
 PATTERN="$1" STRING="$2"

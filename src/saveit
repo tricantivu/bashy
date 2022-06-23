@@ -46,7 +46,11 @@ newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check dependencies.
-type -P calcurse newsboat &> /dev/null || { printError "calcurse and/or newsboat are not installed, they are required."; exit 1; }
+type -P calcurse newsboat &> /dev/null || {
+    printError "calcurse and/or newsboat are not installed, they are required."
+
+    exit 1
+}
 
 # Parse options.
 optionCount=0
@@ -66,22 +70,36 @@ while getopts ':b:r:h' OPTION; do
             restoreOption='true'
         ;;
         (h)
-            { usage; exit 0; }
+            usage
+
+            exit 0
         ;;
         ('?')
-            { printError "Unknown option -${OPTARG}!"; exit 1; }
+            printError "Unknown option -${OPTARG}!"
+
+            exit 1
         ;;
         (:)
-            { printError "-${OPTARG} option expected an argument!"; exit 1; }
+            printError "-${OPTARG} option expected an argument!"
+
+            exit 1
         ;;
     esac
 done
 
-[[ ${optionCount} -eq 0 ]] && { printError "No options were specified."; exit 1; }
+[[ ${optionCount} -eq 0 ]] && {
+    printError "No options were specified."
+
+    exit 1
+}
 
 checkRunning 'calcurse' 'newsboat'
 
-{ "${backupOption:=false}" && "${restoreOption:=false}"; } && { printError "-r and -b options can not be used simultaneously."; exit 1; }
+{ "${backupOption:=false}" && "${restoreOption:=false}"; } && {
+    printError "-r and -b options can not be used simultaneously."
+
+    exit 1
+}
 
 # Create backup.
 
@@ -93,7 +111,9 @@ checkRunning 'calcurse' 'newsboat'
 
         exit 0
     else
-        { printError "Could not create backup \"${backupName}\""; exit 1; }
+        printError "Could not create backup \"${backupName}\""
+
+        exit 1
     fi
 }
 
@@ -106,10 +126,14 @@ checkRunning 'calcurse' 'newsboat'
         if { newsboat -i -- "${newsboatFeeds}"; calcurse -i -- "${calcurseData}"; }; then
             printf '%s\n' "Backup restored successfully!"
         else
-            { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
+            printError "Could not restore backup in \"${pathToBackup}\"!"
+
+            exit 1
         fi
     else
-        { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
+        printError "Could not restore backup in \"${pathToBackup}\"!"
+
+        exit 1
     fi
 }
 

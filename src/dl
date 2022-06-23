@@ -54,7 +54,11 @@ download() {
 
     mapfile -t URLs
 
-    [[ ${#URLs[@]} -eq 0 ]] && { showError "No URL(s) to download."; exit 1; }
+    [[ ${#URLs[@]} -eq 0 ]] && {
+        showError "No URL(s) to download."
+
+        exit 1
+    }
 
     printf '%b\n' "\nDownloading has begun, please be patient...\n"
 
@@ -70,7 +74,11 @@ download() {
         fi
     done
 
-    [[ ${#URLs[@]} -eq ${failedDownloads} ]] && { showError "\nNo URL(s) could be downloaded."; exit 1; }
+    [[ ${#URLs[@]} -eq ${failedDownloads} ]] && {
+        showError "\nNo URL(s) could be downloaded."
+
+        exit 1
+    }
 }
 
 readonly DEFAULT_DIR='/tmp'
@@ -91,23 +99,45 @@ while getopts ':ad:h' OPTION; do
             DIRECTORY="${OPTARG}"
         ;;
         (h)
-            { usage; exit 0; }
+            usage
+
+            exit 0
         ;;
         ('?')
-            { showError "Illegal option -\"${OPTARG}\"."; exit 1; }
+            showError "Illegal option -\"${OPTARG}\"."
+
+            exit 1
         ;;
     esac
 done
 
-[[ ${optionCount} -eq 0 ]] && { showError "No options were selected."; exit 1; }
+[[ ${optionCount} -eq 0 ]] && {
+    showError "No options were selected."
+
+    exit 1
+}
 
 # Assign directory if it was not specified.
 DIRECTORY="${DIRECTORY:-$DEFAULT_DIR}"
 
 # Validate directory.
-[[ -e "${DIRECTORY}" ]] || { showError "Can not save downloads in directory \"${DIRECTORY}\" it does not exist."; exit 1; }
-[[ -d "${DIRECTORY}" ]] || { showError "Can not save downloads in \"${DIRECTORY}\" it is not a directory."; exit 1; }
-[[ -w "${DIRECTORY}" ]] || { showError "Can not save downloads in \"${DIRECTORY}\" it does not have write permissions."; exit 1; }
+[[ -e "${DIRECTORY}" ]] || {
+    showError "Can not save downloads in directory \"${DIRECTORY}\" it does not exist."
+
+    exit 1
+}
+
+[[ -d "${DIRECTORY}" ]] || {
+    showError "Can not save downloads in \"${DIRECTORY}\" it is not a directory."
+
+    exit 1
+}
+
+[[ -w "${DIRECTORY}" ]] || {
+    showError "Can not save downloads in \"${DIRECTORY}\" it does not have write permissions."
+
+    exit 1
+}
 
 # Download URLs.
 if [[ ${convertToAudio} ]]; then

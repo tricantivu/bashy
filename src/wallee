@@ -41,13 +41,19 @@ case "$1" in
         wallpapersDirectory="$1"
     ;;
     (-h | -help | --help)
-        { usage; exit 0; }
+        usage
+
+        exit 0
     ;;
     (+([[:blank:]]) | '')
-        { printError "No option selected."; exit 1; }
+        printError "No option selected."
+
+        exit 1
     ;;
     (*)
-        { printError "Invalid option \"$1\"."; exit 1; }
+        printError "Invalid option \"$1\"."
+
+        exit 1
     ;;
 esac
 
@@ -80,7 +86,9 @@ esac
 if feh --bg-scale --randomize -- "${wallpapersDirectory}"/* 2>&-; then
     printf '%s\n' "Wallpaper set successfully."
 else
-    { printError "Could not set wallpaper."; exit 1; }
+    printError "Could not set wallpaper."
+
+    exit 1
 fi
 
 # Remove trap.

@@ -93,21 +93,43 @@ while getopts ':p:h' OPTION; do
             PID="${OPTARG}"
         ;;
         (h)
-            { usage; exit 0; }
+            usage
+
+            exit 0
         ;;
         (:)
-            { printError "-${OPTARG} option expected an argument.\n"; usage; exit 1; }
+            printError "-${OPTARG} option expected an argument.\n"
+
+            usage
+
+            exit 1
         ;;
         ('?')
-            { printError "Unknown option \"-${OPTARG}\".\n"; usage; exit 1; }
+            printError "Unknown option \"-${OPTARG}\".\n"
+
+            usage
+
+            exit 1
         ;;
     esac
 done
 
-[[ ${optionCount} -eq 0 ]] && { printError "No options were selected.\n"; usage; exit 1; }
+[[ ${optionCount} -eq 0 ]] && {
+    printError "No options were selected.\n"
+
+    usage
+
+    exit 1
+}
 
 # Validate option argument.
-[[ -d "/proc/${PID}" ]] || { printError "PID \"${PID}\" does not exist.\n"; usage; exit 1; }
+[[ -d "/proc/${PID}" ]] || {
+    printError "PID \"${PID}\" does not exist.\n"
+
+    usage
+
+    exit 1
+}
 
 # Show PID information.
 printf "PID ${PID} information:\n\n"

@@ -27,11 +27,22 @@ readonly IMPERIAL_RED='#ED2939'
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check that the user chooses only one mode.
-if [[ $# -eq 0 ]]; then
-    { printError "No mode selected\n"; usage; exit 1; }
-elif [[ $# -gt 1 ]]; then
-    { printError "Too many modes selected!\n"; usage; exit 1; }
-fi
+[[ $# -eq 0 ]] && {
+    printError "No mode selected\n"
+
+    usage
+
+    exit 1
+}
+
+[[ $# -gt 1 ]] && {
+    printError "Too many modes selected!\n"
+
+    usage
+
+    exit 1
+}
+
 
 # Validate mode.
 shopt -s extglob
@@ -41,20 +52,36 @@ case "$1" in
         { usage; exit 0; }
     ;;
     (g?(rab))
-        scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Screenshot was aborted.'; exit 1; }
+        scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+            notify-send 'Screenshot was aborted.'
+
+            exit 1
+        }
 
         notify-send 'Screenshot taken'
     ;;
     (n?(ormal))
-        scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || { notify-send 'Could not take screenshot.'; exit 1; }
+        scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+            notify-send 'Could not take screenshot.'
+
+            exit 1
+        }
 
         notify-send 'Screenshot taken!'
     ;;
     (+([[:blank:]]) | '')
-        { printError "No mode was selected."; exit 1; }
+        printError "No mode was selected."
+
+        exit 1
     ;;
     (*)
-        { printError "Invalid mode \"$1\".\n"; usage; exit 1; }
+        printError "Invalid mode \"$1\".\n"
+
+        usage
+
+        exit 1
+
+
     ;;
 esac
 

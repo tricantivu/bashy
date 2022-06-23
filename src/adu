@@ -44,7 +44,13 @@ showError() {
 trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse arguments.
-[[ $# -eq 0 ]] && { showError "No arguments.\n"; usage; exit 1; }
+[[ $# -eq 0 ]] && {
+    showError "No arguments.\n"
+
+    usage
+
+    exit 1
+}
 
 shopt -s extglob
 
@@ -56,13 +62,21 @@ case "$1" in
         deleteOperation='true'
     ;;
     (h?('elp'))
-        { usage; exit 0; }
+        usage
+
+        exit 0
     ;;
     (+([[:blank:]]) | '')
-        { showError "No operation was specified."; exit 1; }
+        showError "No operation was specified."
+
+        exit 1
     ;;
     (*)
-        { showError "Invalid operation \"$1\"."; usage; exit 1; }
+        showError "Invalid operation \"$1\"."
+
+        usage
+
+        exit 1
     ;;
 esac
 
