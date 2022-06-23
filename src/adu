@@ -71,11 +71,11 @@ shift
 
 "${deleteOperation:-false}" && {
     for ARGUMENT in "$@"; do
-         if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
+        if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
             printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
-         else
+        else
             showError "Could not delete user \"${ARGUMENT}\"."
-         fi
+        fi
     done
 
     exit $?
