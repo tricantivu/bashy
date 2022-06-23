@@ -84,7 +84,7 @@ shift
 
 "${addOperation:-false}" && {
     for ARGUMENT in "$@"; do
-        if sudo useradd --create-home "${ARGUMENT}" &> /dev/null; then
+        if sudo useradd --create-home -- "${ARGUMENT}" &> /dev/null; then
             printf "Successfully added user %s.\n" "${ARGUMENT}"
         else
             showError "Could not add user \"${ARGUMENT}\"."

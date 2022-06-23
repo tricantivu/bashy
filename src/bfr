@@ -53,7 +53,7 @@ for ARGUMENT in "$@"; do
     elif [[ ! -x "${ARGUMENT%/*}" ]]; then                                                                          # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
         printError "Can not rename \"${ARGUMENT}\", the directory it is contained in can not be accessed."
         continue
-    elif ! mv "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}"; then
+    elif ! mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}"; then
         printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
     fi
 done

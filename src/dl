@@ -40,7 +40,6 @@ Examples:
 ${scriptName} -a -d ~/Downloads
 ${scriptName} -d ~/Videos
 ${scriptName} -a
-
 USAGE
 }
 
@@ -62,7 +61,7 @@ download() {
     for URL in "${URLs[@]}"; do
         if [[ -z "${URL}" ]]; then
             continue
-        elif youtube-dl $1 --quiet --no-warnings --no-part --exec "mv {} ${DIRECTORY}" "${URL}" 2> /dev/null; then
+        elif youtube-dl $1 --quiet --no-warnings --no-part --exec "mv -- {} ${DIRECTORY}" -- "${URL}" 2> /dev/null; then
             printf 'URL: %s\n' "\"${URL}\" downloaded successfully."
         else
             showError "URL: \"${URL}\" could not be downloaded."

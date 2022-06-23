@@ -34,6 +34,7 @@ checkRunning() {
     for programName in "$@"; do
         pgrep -i "${programName}" &> /dev/null && {
              printError "${programName} can not be running while executing this script."
+
              exit 1
          }
     done
@@ -87,8 +88,9 @@ checkRunning 'calcurse' 'newsboat'
 "${backupOption}" && {
     { newsboat -e > "${newsboatFeeds}"; calcurse -x > "${calcurseData}"; }                                                                    # Export newsboat's and calcurse's data in order to be backed up.
 
-    if tar -c --remove-files -f "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then
+    if tar -c --remove-files -f -- "${backupName}" "${newsboatFeeds}" "${calcurseData}" &> /dev/null; then
         printf '%s\n' "Backup \"${backupName}\" created successfully!"
+
         exit 0
     else
         { printError "Could not create backup \"${backupName}\""; exit 1; }
@@ -100,8 +102,8 @@ checkRunning 'calcurse' 'newsboat'
 "${restoreOption}" && {
     printf '%s\n' "Restoring backup \"${pathToBackup}\"..."
 
-    if tar -xf "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
-        if { newsboat -i "${newsboatFeeds}"; calcurse -i "${calcurseData}"; }; then
+    if tar -xf -- "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
+        if { newsboat -i -- "${newsboatFeeds}"; calcurse -i -- "${calcurseData}"; }; then
             printf '%s\n' "Backup restored successfully!"
         else
             { printError "Could not restore backup in \"${pathToBackup}\"!"; exit 1; }
