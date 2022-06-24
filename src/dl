@@ -141,7 +141,7 @@ DIRECTORY="${DIRECTORY:-$DEFAULT_DIR}"
 }
 
 # Download URLs.
-if [[ ${convertToAudio} ]]; then
+if ${convertToAudio}; then
     download '--extract-audio'
 else
     download
