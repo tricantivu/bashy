@@ -67,3 +67,39 @@ Collection of shell scripts.
 
 
 * si - Shows some (shell, operating system, kernel, architecture, amount of installed packages, and distribution name) system information.
+
+
+* adu - user(add|del) wrapper script to add or delete multiple users.
+
+
+![GIF8](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/adu.gif)
+
+
+* bfr - Batch file rename script.
+
+
+![GIF9](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/bfr.gif)
+
+
+* dl - youtube-dl wrapper script that reads URLs to download from standard input.
+
+
+![GIF10](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/dl.gif)
+
+
+* screenshot - scrot wrapper script.
+
+
+![GIF11](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/screenshot.gif)
+
+
+* spi - Show information of a process identifier.
+
+
+![GIF12](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/spi.gif)
+
+
+* wallee - feh wrapper script to set a random wallpaper from a directory.
+
+
+![GIF13](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/wallee.gif)
