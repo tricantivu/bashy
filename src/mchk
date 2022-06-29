@@ -27,6 +27,8 @@ readonly LIGHT_GREEN="\e[92m" LIGHT_RED="\e[91m" NORMAL="\e[0m"
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check for non-system accounts without a password.
+shopt -s extglob
+
 printf '%s\n' "Checking accounts..."
 
 while read -r userAccount; do
@@ -37,10 +39,10 @@ while read -r userAccount; do
         (NP)
             printf '%b\n' "${LIGHT_RED}WARNING! ${userAccount} does not have a password set.${NORMAL}"
         ;;
-        (P|PS)
+        (P?(S))
             printf '%b\n' "${LIGHT_GREEN}OK! ${userAccount} has a password set.${NORMAL}"
         ;;
-        (L|LK)
+        (L?(K))
             printf '%b\n' "${LIGHT_GREEN}OK! ${userAccount} account is locked.${NORMAL}"
         ;;
     esac
