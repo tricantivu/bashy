@@ -11,7 +11,7 @@ Collection of shell scripts.
 
 [Newsboat](https://newsboat.org)
 
-[GNU Bash >= 5.1.16](https://www.gnu.org/software/bash)
+[GNU Bash](https://www.gnu.org/software/bash) >= 5.1.16
 
 [scrot](https://github.com/dreamer/scrot)
 
