@@ -55,18 +55,28 @@ PATTERN="$1" STRING="$2"
 shift 2
 
 for ARGUMENT in "$@"; do
-    if [[ ! -f "${ARGUMENT}" ]]; then
+    [[ -f "${ARGUMENT}" ]] || {
+
         printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
         continue
-    elif [[ ! -w "${ARGUMENT}" ]]; then
+    }
+
+    [[ -w "${ARGUMENT}" ]] || {
+
         printError "Can not rename \"${ARGUMENT}\", it does not have write permission."
         continue
-    elif [[ ! -x "${ARGUMENT%/*}" ]]; then                                                                          # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
+    }
+
+    [[ -x "${ARGUMENT%/*}" ]] || {                                                                          # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
+
         printError "Can not rename \"${ARGUMENT}\", the directory it is contained in can not be accessed."
         continue
-    elif ! mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}"; then
+    }
+
+    mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}" || {
+
         printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
-    fi
+    }
 done
 
 trap &> /dev/null
