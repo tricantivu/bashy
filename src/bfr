@@ -17,11 +17,13 @@ Example:
 
 ${scriptName} FILE file FILE1 FILE2
 
-In such example ${scriptName} will rename FILE1 and FILE2 to file1 and file2 (respectively) by substituting the pattern "FILE" with "file".
+In such example ${scriptName} will rename FILE1 and FILE2 to file1 and
+file2 (respectively) by substituting the pattern "FILE" with "file".
 
 Note:
 
-If the pattern uses wildcards/globs ([], [^], *, ?, etc.), single quote it to prevent errors with your shell.
+If the pattern uses wildcards/globs ([], [^], *, ?, etc.), single quote
+it to prevent errors with your shell.
 USAGE
 }
 
