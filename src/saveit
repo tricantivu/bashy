@@ -33,10 +33,10 @@ printError() {
 checkRunning() {
     for programName in "$@"; do
         pgrep -i "${programName}" &> /dev/null && {
-             printError "${programName} can not be running while executing this script."
+            printError "${programName} can not be running while executing this script."
 
-             exit 1
-         }
+            exit 1
+        }
     done
 }
 
