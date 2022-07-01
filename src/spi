@@ -53,7 +53,7 @@ processStatus() {
             # Parse the status.
             prefixRemoved="${fileLine#State:}"
             tabRemoved="${prefixRemoved##$'\t'}"
-            letterRemoved="${tabRemoved#[RSDZTtWXxKP]' '}"
+            letterRemoved="${tabRemoved#[RSDZTItWXxKP]' '}"
             parenthesisRemoved="${letterRemoved//[()]/}"
 
             printf 'Status: %s\n' "${parenthesisRemoved^}"
