@@ -83,16 +83,18 @@ esac
 # Manage users.
 shift
 
+failedOperations=0
+
 "${deleteOperation:-false}" && {
     for ARGUMENT in "$@"; do
         if sudo userdel --remove -- "${ARGUMENT}" &> /dev/null; then
             printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
         else
             showError "Could not delete user \"${ARGUMENT}\"."
+            ((failedOperations++))
+            continue
         fi
     done
-
-    exit $?
 }
 
 
@@ -102,10 +104,15 @@ shift
             printf "Successfully added user %s.\n" "${ARGUMENT}"
         else
             showError "Could not add user \"${ARGUMENT}\"."
+            ((failedOperations++))
+            continue
         fi
     done
+}
 
-    exit $?
+(( ${failedOperations} >= 1 )) && {
+
+    exit 1
 }
 
 trap &> /dev/null
