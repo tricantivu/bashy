@@ -43,6 +43,13 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
     exit 1
 }
 
+# Check if there is a configured display.
+[[ -z "${DISPLAY}" ]] || {
+
+    printError "No display to take a screenshot of."
+
+    exit 1
+}
 
 # Validate mode.
 shopt -s extglob
