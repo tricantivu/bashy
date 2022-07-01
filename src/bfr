@@ -17,8 +17,8 @@ Example:
 
 ${scriptName} FILE file FILE1 FILE2
 
-In such example ${scriptName} will rename FILE1 and FILE2 to file1 and
-file2 (respectively) by substituting the pattern "FILE" with "file".
+${scriptName} will rename FILE1 and FILE2 to file1 and file2
+(respectively) by replacing pattern "FILE" with "file".
 
 Note:
 
