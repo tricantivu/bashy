@@ -123,7 +123,7 @@ checkRunning 'calcurse' 'newsboat'
     printf '%s\n' "Restoring backup \"${pathToBackup}\"..."
 
     if tar -xf -- "${pathToBackup}" &> /dev/null; then                                                                                           # Extract the contents of the backup.
-        if { newsboat -i -- "${newsboatFeeds}"; calcurse -i -- "${calcurseData}"; }; then
+        if { newsboat -i -- "${newsboatFeeds}"; calcurse -i -- "${calcurseData}"; } &> /dev/null; then
             printf '%s\n' "Backup restored successfully!"
         else
             printError "Could not restore backup in \"${pathToBackup}\"!"
