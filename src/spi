@@ -69,6 +69,13 @@ processFDs() {
 
     fileDescriptors="$(find "/proc/${PID}/fd" -type l -printf '%f, ' 2>&-)"
 
+    [[ -z "${fileDescriptors}" ]] && {
+
+        printError "File descriptors could not be shown because of a lack of permissions or there weren't any at all"
+
+        return 1
+    }
+
     printf 'Open file descriptors: %s\n' "${fileDescriptors%, }"
 }
 
