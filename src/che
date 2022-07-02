@@ -29,8 +29,6 @@ OPTIONS
         None
 
 FILES
-        /usr/include/sysexits.h
-
         /etc/passwd
 
         /etc/shadow
