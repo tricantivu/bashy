@@ -38,11 +38,11 @@ printError() {
 }
 
 processName() {
-    local name=''
+    local processName=''
 
-    read -r name < "/proc/${PID}/comm"
+    read -r processName < "/proc/${PID}/comm"
 
-    printf 'Process: %s\n' "${name}"
+    printf 'Process: %s\n' "${processName}"
 }
 
 processStatus() {
