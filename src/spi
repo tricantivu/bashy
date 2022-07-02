@@ -87,6 +87,32 @@ processCommand() {
     printf 'Command line: %s\n' "${processCommand%% }"
 }
 
+processEnvironment() {
+    local processVariables environmentVariables
+
+    processVariables="$(tr '\0' '\n' 2>&- < "/proc/${PID}/environ")"
+
+    environmentVariables=0
+
+    while read -r environmentVariable; do
+        [[ -z "${environmentVariable}" ]] && {
+
+            continue
+        }
+
+        ((environmentVariables++))
+    done <<< "${processVariables}"
+
+    (( ${environmentVariables} == 0 )) && {
+
+        printError "Can not show PID ${PID}'s environment, lacking permissions and/or variables."
+
+        return 1
+    }
+
+    printf 'Environment variables:\n\n%s\n' "${processVariables}"
+}
+
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
@@ -145,5 +171,6 @@ processName
 processStatus
 processCommand
 processFDs
+processEnvironment
 
 trap &> /dev/null
