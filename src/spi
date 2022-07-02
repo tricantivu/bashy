@@ -38,7 +38,7 @@ printError() {
 }
 
 processName() {
-    local processName=''
+    local processName
 
     read -r processName < "/proc/${PID}/comm"
 
