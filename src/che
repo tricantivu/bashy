@@ -4,7 +4,7 @@
 usage() {
     local scriptName="${0##*/}"
 
-    cat << USAGE
+cat << USAGE
 NAME
         ${scriptName} - Change account expiration dates with relative time units.
 
