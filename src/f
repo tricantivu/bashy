@@ -3,7 +3,7 @@
 # Functions
 usage() {
 
-cat << HERE
+cat << USAGE
 NAME
         Write a regular file
 
@@ -37,7 +37,7 @@ EXIT STATUS
 
 SEE ALSO
         pathchk(1), touch(1)
-HERE
+USAGE
 
     exit ${EX_OK}
 }
