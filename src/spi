@@ -40,9 +40,9 @@ printError() {
 processName() {
     local name=''
 
-    while read -r name; do
-        printf 'Process: %s\n' "${name}"
-    done < <(cat "/proc/${PID}/comm")
+    read -r name < "/proc/${PID}/comm"
+
+    printf 'Process: %s\n' "${name}"
 }
 
 processStatus() {
