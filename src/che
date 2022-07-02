@@ -53,8 +53,8 @@ EXIT VALUES
             Catch-all for errors with unknown cause.
 
         72
-            Operating system file was not found or has insufficient
-            permissions to perform an operation using it.
+            Operating system file was not found or ${scriptName} has 
+            insufficient permissions to perform an operation using it.
 
 SEE ALSO
         date(1), chage(1)
