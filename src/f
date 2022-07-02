@@ -70,34 +70,34 @@ printf '%s\n' "$@" | sort | uniq -d | grep -q '.' && {
 }
 
 # Write file(s).
-failed=0
+failedWrites=0
 
-for file in "$@"; do
-    pathchk "${file}" 1>&- 2>&- || {
-        printError "Invalid filename \"${file}\"."
+for fileName in "$@"; do
+    pathchk "${fileName}" 1>&- 2>&- || {
+        printError "Invalid filename \"${fileName}\"."
 
-        failed=${failed}+1
+        failedWrites=${failedWrites}+1
         continue
     }
 
-    [ -e "${file}" ] && {
-        printError "File \"${file}\" already exists."
+    [ -e "${fileName}" ] && {
+        printError "File \"${fileName}\" already exists."
 
-        failed=${failed}+1
+        failedWrites=${failedWrites}+1
         continue
     }
 
-    : > "${file}" 2>&- || {
+    : > "${fileName}" 2>&- || {
         printError "Could not create file."
 
-        failed=${failed}+1
+        failedWrites=${failedWrites}+1
         continue
     }
 
-    printf '%s\n' "File \"${file}\" created successfully."
+    printf '%s\n' "File \"${fileName}\" created successfully."
 done
 
-((failed >= 1)) && {
+((failedWrites >= 1)) && {
 
     exit ${EX_CANTCREAT}
 }
