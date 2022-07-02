@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+
+# Functions
+usage() {
+    local scriptName="${0##*/}"
+
+    cat << USAGE
+NAME
+        ${scriptName} - Change account expiration dates with relative time units.
+
+SYNOPSIS
+        ${scriptName} [UNIT] [USER]
+
+DESCRIPTION
+        ${scriptName} sets the expiration date for a given user account an
+        amount of days, months or years in the future in relation to the
+        current date.
+
+        Time units are specified by prefixing the letters "d", "m" or "y"
+        (case-insensitive) with a positive integer.
+
+        The letters "d", "m" and "y" correspond to days, months and years
+        respectively.
+
+        For example, "5m", is a valid time unit and it will set the account
+        expiration date to five months from the current date.
+
+OPTIONS
+        None
+
+FILES
+        /usr/include/sysexits.h
+
+        /etc/passwd
+
+        /etc/shadow
+
+EXAMPLES
+        ${scriptName} 7m foo
+
+        ${scriptName} 100Y bar
+
+        ${scriptName} 2d alice
+
+        ${scriptName} 8M bob
+
+EXIT VALUES
+        64
+            Incorrect script usage.
+
+        67
+            User does not exist.
+
+        69
+            Catch-all for errors with unknown cause.
+
+        72
+            Operating system file was not found or has insufficient permissions to
+            perform an operation using it.
+
+SEE ALSO
+        date(1), chage(1)
+
+AUTHOR
+        Alejandro Cervera
+USAGE
+}
+
+printError() {
+    printf -- "$1\n" >&2
+}
+
+readonly EX_USAGE=64 EX_NOUSER=67 EX_UNAVAILABLE=69 EX_OSFILE=72
+
+readonly SHADOW_FILE='/etc/shadow' PASSWD_FILE='/etc/passwd'
+
+# Verify script usage
+(($# < 2)) && {
+    printError "Insufficient arguments.\n"
+
+    usage
+
+    exit ${EX_USAGE}
+}
+
+(($# > 2)) && {
+    printError "Too many arguments.\n"
+
+    usage
+
+    exit ${EX_USAGE}
+}
+
+# Parse first positional parameter before validating.
+shopt -s extglob
+
+zerosRemoved="${1##+(0)}"
+
+shopt -u extglob
+
+# Argument validation.
+shopt -s nocasematch
+
+# First argument
+[[ "${zerosRemoved}" =~ ^[0-9]+[dmy]$ ]] || {
+
+    printError "Invalid time unit \"${zerosRemoved}\"."
+
+    exit ${EX_USAGE}
+}
+
+[[ "${zerosRemoved}" == [dmy] ]] && {
+
+    printError "Invalid time unit."
+
+    exit ${EX_USAGE}
+}
+
+# Verify required files by chage command exist and have necessary permissions.
+[[ -e "${SHADOW_FILE}" && -e "${PASSWD_FILE}" ]] || {
+
+    printError "Can not change expiration date, file ${SHADOW_FILE} or ${PASSWD_FILE} do not exist."
+
+    exit ${EX_OSFILE}
+}
+
+[[ -w "${SHADOW_FILE}" && -w "${PASSWD_FILE}" ]] || {
+
+    printError "Can not change expiration date, files ${SHADOW_FILE} or ${PASSWD_FILE} are not writable."
+
+    exit ${EX_OSFILE}
+}
+
+# Second argument.
+getent passwd "$2" &> /dev/null
+
+(($? == 2)) && {
+
+    printError "Can not change expiration date for account \"$2\", it does not exist."
+
+    exit ${EX_NOUSER}
+}
+
+# Parse unit to a format understandable for date command.
+case "${zerosRemoved}" in
+    (*d)
+        timeUnit="${zerosRemoved/[Dd]/ days}"
+    ;;
+    (*m)
+        timeUnit="${zerosRemoved/[Mm]/ months}"
+    ;;
+    (*y)
+        timeUnit="${zerosRemoved/[Yy]/ years}"
+    ;;
+esac
+
+# Generate expiration date using parsed unit.
+expirationDate="$(date --date="${timeUnit}" '+%Y-%m-%d')"
+
+# Prompt for a user confirmation of date's validity.
+read -r -p "Is expiration date ${expirationDate} correct? [Y/N] "
+
+until [[ "${REPLY}" =~ [Yn] ]]; do
+    read -r -p "Invalid confirmation reply, try again. "
+done
+
+[[ "${REPLY}" == 'N' ]] && {
+
+    echo "Exiting..."
+
+    exit 0
+}
+
+shopt -u nocasematch
+
+# Set account expiration date.
+sudo chage -E "${expirationDate}" "$2" &> /dev/null || {
+
+    printError "Could not change account expiration age."
+
+    exit ${EX_UNAVAILABLE}
+}
+
+echo "Account expiration changed successfully."

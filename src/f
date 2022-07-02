@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# Functions
+usage() {
+
+cat << HERE
+NAME
+        Write a regular file
+
+SYNOPSIS
+        ${scriptName} <OPTION> <NAME>
+
+DESCRIPTION
+        Use colon shell command ':' and input-output
+        redirection to write a file named NAME.
+
+OPTIONS
+        --help, -h
+            Show script usage
+
+EXAMPLES
+        ${scriptName} foo
+
+        ${scriptName} /tmp/apple
+
+        ${scriptName} tux puffy
+
+EXIT STATUS
+        0
+            Script executed successfully.
+
+        64
+            Invalid script usage.
+
+        73
+            One or more files could not be created.
+
+SEE ALSO
+        pathchk(1), touch(1)
+HERE
+
+    exit ${EX_OK}
+}
+
+printError() {
+    printf "ERROR: $1\n" >&2
+}
+
+# Global variables
+scriptName="${0##*/}"
+
+# Constants
+readonly EX_OK=0 EX_USAGE=64 EX_CANTCREAT=73
+
+# Verify script usage
+[ $# -eq 0 ] && {
+    printError "No option/argument specified."
+
+    exit ${EX_USAGE}
+}
+
+[ "$1" = '--help' ] || [ "$1" = '-h' ] && {
+    usage
+}
+
+printf '%s\n' "$@" | sort | uniq -d | grep -q '.' && {
+    printError "Duplicate file names."
+
+    exit ${EX_USAGE}
+}
+
+# Write file(s).
+failed=0
+
+for file in "$@"; do
+    pathchk "${file}" 1>&- 2>&- || {
+        printError "Invalid filename \"${file}\"."
+
+        failed=${failed}+1
+        continue
+    }
+
+    [ -e "${file}" ] && {
+        printError "File \"${file}\" already exists."
+
+        failed=${failed}+1
+        continue
+    }
+
+    : > "${file}" 2>&- || {
+        printError "Could not create file."
+
+        failed=${failed}+1
+        continue
+    }
+
+    printf '%s\n' "File \"${file}\" created successfully."
+done
+
+((failed >= 1)) && {
+
+    exit ${EX_CANTCREAT}
+}
+
+exit ${EX_OK}
