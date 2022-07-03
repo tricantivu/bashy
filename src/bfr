@@ -59,25 +59,25 @@ shift 2
 for ARGUMENT in "$@"; do
     [[ -f "${ARGUMENT}" ]] || {
 
-        printError "Can not rename \"${ARGUMENT}\", it is not a regular file."
+        printError "Can not rename \"${ARGUMENT}\", it isn't a file."
         continue
     }
 
     [[ -w "${ARGUMENT}" ]] || {
 
-        printError "Can not rename \"${ARGUMENT}\", it does not have write permission."
+        printError "Can not rename \"${ARGUMENT}\", it's unwritable."
         continue
     }
 
     [[ -x "${ARGUMENT%/*}" || -x . ]] || {                                                                          # Credits to user roaima (https://unix.stackexchange.com/users/100397/roaima) for his answer https://unix.stackexchange.com/a/272226 in https://unix.stackexchange.com/questions/272225/minimum-file-permissions-to-rename-file
 
-        printError "Can not rename \"${ARGUMENT}\", the directory it is contained in can not be accessed."
+        printError "Can not rename \"${ARGUMENT}\", parent directory is inaccessible."
         continue
     }
 
     mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}" || {
 
-        printError "Can not rename \"${ARGUMENT}\", it does not match pattern \"${PATTERN}\"."
+        printError "Can not rename \"${ARGUMENT}\", doesn't match pattern \"${PATTERN}\"."
     }
 done
 
