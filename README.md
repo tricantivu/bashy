@@ -17,6 +17,8 @@ Collection of shell scripts.
 
 [feh](https://feh.finalrewind.org) 3.9
 
+[sudo](https://www.sudo.ws) 1.9.11p3
+
 [youtube-dl](https://github.com/ytdl-org/youtube-dl) 2021.12.17
 
 
