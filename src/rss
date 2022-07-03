@@ -38,12 +38,18 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
     exit 1
 }
 
-[[ -e "${feedsFile}" ]] || printf '%s\n' "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
+[[ -e "${feedsFile}" ]] || {
 
-if [[ -s "${feedsFile}" ]]; then
+    printf '%s\n' "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
+}
+
+[[ -s "${feedsFile}" ]] && {
+
     printf '%s\n' "${feedsToAdd// /$'\n'}" >> "${feedsFile}"
-else
-    printf '%s\n' "${feedsToAdd// /$'\n'}" > "${feedsFile}"
-fi
+
+    exit $?
+}
+
+printf '%s\n' "${feedsToAdd// /$'\n'}" > "${feedsFile}"
 
 trap &> /dev/null
