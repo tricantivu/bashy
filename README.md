@@ -19,6 +19,8 @@ Collection of shell scripts.
 
 [sudo](https://www.sudo.ws) 1.9.11p3
 
+[shellcheck](https://www.shellcheck.net) 0.8.0 (**optional**)
+
 [youtube-dl](https://github.com/ytdl-org/youtube-dl) 2021.12.17
 
 
