@@ -26,7 +26,7 @@ printError() {
 }
 
 # Global variables.
-feedsFile="${HOME}/.newsboat/urls" feedsToAdd="$*"
+feedsFile="${HOME}/.newsboat/urls"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
@@ -45,11 +45,11 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ -s "${feedsFile}" ]] && {
 
-    printf '%s\n' "${feedsToAdd// /$'\n'}" >> "${feedsFile}"
+    printf '%s\n' "$@" >> "${feedsFile}"
 
     exit $?
 }
 
-printf '%s\n' "${feedsToAdd// /$'\n'}" > "${feedsFile}"
+printf '%s\n' "$@" > "${feedsFile}"
 
 trap &> /dev/null
