@@ -21,6 +21,8 @@ Collection of shell scripts.
 
 [shellcheck](https://www.shellcheck.net) 0.8.0 (**optional**)
 
+[GNU Coreutils](https://www.gnu.org/software/coreutils) 9.1
+
 [youtube-dl](https://github.com/ytdl-org/youtube-dl) 2021.12.17
 
 
