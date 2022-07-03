@@ -156,6 +156,14 @@ done
 }
 
 # Validate option argument.
+[[ "${PID}" =~ ^[0-9]+$ ]] || {
+    printError "PID must be numeric.\n"
+
+    usage
+
+    exit 1
+}
+
 [[ -d "/proc/${PID}" ]] || {
     printError "PID \"${PID}\" does not exist.\n"
 
