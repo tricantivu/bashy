@@ -75,7 +75,7 @@ for ARGUMENT in "$@"; do
         continue
     }
 
-    mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}" || {
+    mv -- "${ARGUMENT}" "${ARGUMENT/$PATTERN/$STRING}" 2>&- || {
 
         printError "Can not rename \"${ARGUMENT}\", doesn't match pattern \"${PATTERN}\"."
     }
