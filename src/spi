@@ -82,7 +82,7 @@ processFDs() {
 processCommand() {
     local processCommand
 
-    processCommand="$(tr '\0' ' ' < "/proc/${PID}/cmdline" 2>&-)"
+    processCommand="$(tr '\0' ' ' 2>&- < "/proc/${PID}/cmdline")"
 
     printf 'Command line: %s\n' "${processCommand%% }"
 }
