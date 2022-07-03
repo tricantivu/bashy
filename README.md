@@ -2,7 +2,7 @@
 Collection of shell scripts.
 
 
-# Software required
+# Dependencies
 [Git](https://git-scm.com) 2.36.1
 
 [Pamac](https://gitlab.manjaro.org/applications/pamac) 10.4.1-1
@@ -20,7 +20,7 @@ Collection of shell scripts.
 [youtube-dl](https://github.com/ytdl-org/youtube-dl) 2021.12.17
 
 
-# Installation instructions
+# Installation
 0. Open a terminal window.
 1. Clone the repository `git clone https://github.com/tricantivu/bashy.git`.
 2. Open the .bashrc file in your home directory.
@@ -34,7 +34,7 @@ Collection of shell scripts.
 5. Restart your shell.
 
 
-# Script descriptions
+# Descriptions and showcase
 
 * rss - Adds multiple RSS/Atom feeds to newsboat.
 
