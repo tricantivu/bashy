@@ -69,7 +69,7 @@ Collection of shell scripts.
 ![GIF5](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/chk4up.gif)
 
 
-* cc - Clears one or more ~/.cache directories.
+* clcd - Clears one or more ~/.cache directories.
 
 
 * si - Shows some (shell, operating system, kernel, architecture, amount of installed packages, and distribution name) system information.
