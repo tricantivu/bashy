@@ -25,6 +25,12 @@ EXAMPLES
 
         ${scriptName} tux puffy
 
+CAVEATS
+        ${scriptName} will fail if executed with the
+        friendly interactive shell (fish) since fish
+        does not make use of an equals sign (=) when
+        assigning values to parameters.
+
 EXIT STATUS
         0
             Script executed successfully.
