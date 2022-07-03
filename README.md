@@ -33,7 +33,7 @@ Collection of shell scripts.
 3. Prepend the absolute path of the cloned repository to the PATH environment variable as follows:
 
 
-`PATH="${pathToRepository}/src:${PATH}"`
+`PATH="<pathToRepository>/src:${PATH}"`
 
 
 4. Save changes and exit.
