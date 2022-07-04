@@ -53,7 +53,7 @@ EXIT VALUES
             Catch-all for errors with unknown cause.
 
         72
-            Operating system file was not found or ${scriptName} has 
+            Operating system file was not found or ${scriptName} has
             insufficient permissions to perform an operation using it.
 
 SEE ALSO
