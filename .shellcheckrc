@@ -1,2 +1,2 @@
 external-sources=true
-disable=SC2059
+disable=SC2059,SC2004

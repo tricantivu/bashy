@@ -45,6 +45,7 @@ SEE ALSO
         pathchk(1), touch(1)
 USAGE
 
+    # shellcheck disable=SC2086
     exit ${EX_OK}
 }
 
@@ -62,6 +63,7 @@ readonly EX_OK=0 EX_USAGE=64 EX_CANTCREAT=73
 [ $# -eq 0 ] && {
     printError "No option/argument specified."
 
+    # shellcheck disable=SC2086
     exit ${EX_USAGE}
 }
 
@@ -72,6 +74,7 @@ readonly EX_OK=0 EX_USAGE=64 EX_CANTCREAT=73
 printf '%s\n' "$@" | sort | uniq -d | grep -q '.' && {
     printError "Duplicate file names."
 
+    # shellcheck disable=SC2086
     exit ${EX_USAGE}
 }
 

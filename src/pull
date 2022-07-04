@@ -41,6 +41,7 @@ trap 'rm ${TMPFILE} &> /dev/null' EXIT
 
 failedPulls=0
 
+# shellcheck disable=SC2154
 for localRepository in "$@"; do
     [[ -e "${localRepository}" ]] || {
 
@@ -64,6 +65,8 @@ for localRepository in "$@"; do
     }
 
     # Pull changes
+
+    # shellcheck disable=SC2164
     cd "${localRepository}"
 
     git pull > "${TMPFILE}" || {
