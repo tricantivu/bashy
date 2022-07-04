@@ -46,6 +46,15 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
     printf "${LIGHT_YELLOW_FG}Warning!${RESET} Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now.\n"
 }
 
+newsboatPath="${feedsFile%'/urls'}"
+
+[[ -d "${newsboatPath}" ]] || {
+
+    printError "Can not add feeds, the directory used to place them does not exist."
+
+    exit 1
+}
+
 [[ -s "${feedsFile}" ]] && {
 
     printf '%s\n' "$@" >> "${feedsFile}"
