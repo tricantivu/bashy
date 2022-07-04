@@ -12,6 +12,17 @@ usage() {
 cat << USAGE
 Description: Empty one or more program's ~/.cache directory.
 Usage: ${scriptName} <NAME>
+
+Examples:
+
+${scriptName} vim youtube-dl
+
+${scriptName} "program name with whitespace" duplicity
+
+Note:
+
+Arguments must be the basenames of the directories in ~/.cache
+and not absolute nor relative paths.
 USAGE
 }
 
