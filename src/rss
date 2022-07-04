@@ -55,6 +55,13 @@ newsboatPath="${feedsFile%'/urls'}"
     exit 1
 }
 
+[[ -w "${newsboatPath}" && -w "${feedsFile}" ]] || {
+
+    printError "Can not add feeds, the directory and/or file used to place them are not writable."
+
+    exit 1
+}
+
 [[ -s "${feedsFile}" ]] && {
 
     printf '%s\n' "$@" >> "${feedsFile}"
