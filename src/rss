@@ -28,6 +28,9 @@ printError() {
 # Global variables.
 feedsFile="${HOME}/.newsboat/urls"
 
+# Constant(s)
+readonly LIGHT_YELLOW_FG='\e[38;5;11m' RESET='\e[0m'
+
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && {
@@ -40,7 +43,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ -e "${feedsFile}" ]] || {
 
-    printf '%s\n' "Warning! Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now."
+    printf "${LIGHT_YELLOW_FG}Warning!${RESET} Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now.\n"
 }
 
 [[ -s "${feedsFile}" ]] && {
