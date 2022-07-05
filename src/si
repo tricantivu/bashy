@@ -30,12 +30,12 @@ welcomeMessage() {
 }
 
 debianCount() {
-    printf 'Packages: '; grep -vc 'Listing...' < <(apt list --installed 2>&-)                                                                                            # Silence warnings/errors in apt.
+    printf 'Packages: '; grep -vc 'Listing...' < <(apt list --installed 2>&-)
 }
 
 fedoraCount() {
     printf 'Packages: '; wc -l < <(dnf list --installed) || \
-    printf 'Packages: '; wc -l < <(yum list --installed)                                                                                                                 # Fallback to yum
+    printf 'Packages: '; wc -l < <(yum list --installed)                                                                                                                     # Fallback to yum
 }
 
 archCount() {
