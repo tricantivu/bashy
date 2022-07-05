@@ -29,7 +29,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 # Check for non-system accounts without a password.
 shopt -s extglob
 
-printf '%s\n' "Checking accounts..."
+printf "Checking accounts...\n"
 
 while read -r userAccount; do
 
@@ -51,7 +51,7 @@ done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
 # Check for package updates and apply them if any are available.
 . /etc/os-release
 
-printf '%b\n' "\nChecking for package updates...\n"
+printf "\nChecking for package updates...\n\n"
 
 case "${ID_LIKE:-$ID}" in
     (arch)
@@ -68,9 +68,9 @@ case "${ID_LIKE:-$ID}" in
     ;;
 esac
 
-printf '%b\n' "\nOpen ports:"; {
+printf "\nOpen ports:\n"; {
 
     ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq
 }
 
-{ printf '%s\n' "Disk used:"; df -h / | tail -1 | awk '{print $5}'; }
+{ printf "Disk used:\n"; df -h / | tail -1 | awk '{print $5}'; }
