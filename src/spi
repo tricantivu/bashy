@@ -113,6 +113,11 @@ processEnvironment() {
     printf 'Environment variables:\n\n%s\n' "${processVariables}"
 }
 
+processOwnership() {
+
+    stat --printf "Ownership of PID ${PID}:\n\nGroup: %G (GID: %g)\tOwner: %U (UID: %u)\n" "/proc/${PID}"
+}
+
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
@@ -178,6 +183,7 @@ printf "PID ${PID} information:\n\n"
 processName
 processStatus
 processCommand
+processOwnership
 processFDs
 processEnvironment
 
