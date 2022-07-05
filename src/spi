@@ -76,7 +76,7 @@ processFDs() {
         return 1
     }
 
-    printf 'Open file descriptors: %s\n' "${fileDescriptors%, }"
+    printf 'Open file descriptors: %s\n\n' "${fileDescriptors%, }"
 }
 
 processCommand() {
@@ -84,7 +84,7 @@ processCommand() {
 
     processCommand="$(tr '\0' ' ' 2>&- < "/proc/${PID}/cmdline")"
 
-    printf 'Command line: %s\n' "${processCommand%% }"
+    printf 'Command line: %s\n\n' "${processCommand%% }"
 }
 
 processEnvironment() {
@@ -110,12 +110,12 @@ processEnvironment() {
         return 1
     }
 
-    printf 'Environment variables:\n\n%s\n' "${processVariables}"
+    printf 'Environment variables:\n\n%s\n\n' "${processVariables}"
 }
 
 processOwnership() {
 
-    stat --printf "Ownership of PID ${PID}:\n\nGroup: %G (GID: %g)\tOwner: %U (UID: %u)\n" "/proc/${PID}"
+    stat --printf "Ownership of PID ${PID}:\n\nGroup: %G (GID: %g)\tOwner: %U (UID: %u)\n\n" "/proc/${PID}"
 }
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
