@@ -19,14 +19,14 @@
 trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
 
 # Constants
-readonly LIGHT_RED="\e[91m" LIGHT_GREEN="\e[92m" LIGHT_YELLOW="\e[93m" YELLOW_BLUE="\e[94m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
+readonly LIGHT_RED="\e[91m" LIGHT_GREEN="\e[92m" LIGHT_YELLOW="\e[93m" LIGHT_BLUE="\e[94m" COLOR_END="\e[0m"                                                                # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
 
 # Global variables
 . /etc/os-release
 
 # Functions
 welcomeMessage() {
-    printf "%b\n\n" "${LIGHT_RED}System information for:${COLOR_END} ${LIGHT_YELLOW}${USER}${COLOR_END}${LIGHT_GREEN}@${COLOR_END}${YELLOW_BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
+    printf "%b\n\n" "${LIGHT_RED}System information for:${COLOR_END} ${LIGHT_YELLOW}${USER}${COLOR_END}${LIGHT_GREEN}@${COLOR_END}${LIGHT_BLUE}${HOSTNAME}${COLOR_END}"     # Use some rainbow colors in the message.
 }
 
 debianCount() {
