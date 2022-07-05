@@ -86,7 +86,7 @@ osInfo() {
         ;;
     esac
 
-    kernelRelease="$(uname -r)"
+    read -r kernelRelease < /proc/sys/kernel/osrelease
 
     printf "%s\n" "OS: ${operatingSystem}" "Kernel: ${kernelRelease}" "Architecture: ${HOSTTYPE}"
 }
