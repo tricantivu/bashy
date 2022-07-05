@@ -37,13 +37,13 @@ while read -r userAccount; do
 
     case "${passwordStatus}" in
         (NP)
-            printf '%b\n' "${BOLD}${YELLOW}WARNING! ${userAccount} does not have a password set.${RESET}"
+            printf '%b\n' "${BOLD}${YELLOW}WARNING!${RESET} ${userAccount} does not have a password set."
         ;;
         (P?(S))
-            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} has a password set.${RESET}"
+            printf '%b\n' "${BOLD}${GREEN}OK!${RESET} ${userAccount} has a password set."
         ;;
         (L?(K))
-            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} account is locked.${RESET}"
+            printf '%b\n' "${BOLD}${GREEN}OK!${RESET} ${userAccount} account is locked."
         ;;
     esac
 done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
