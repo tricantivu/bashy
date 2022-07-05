@@ -22,7 +22,7 @@ printError() {
 }
 
 # Constants
-readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" BOLD="\e[1m" NORMAL="\e[0m"
+readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" BOLD="\e[1m" RESET="\e[0m"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
@@ -37,13 +37,13 @@ while read -r userAccount; do
 
     case "${passwordStatus}" in
         (NP)
-            printf '%b\n' "${BOLD}${YELLOW}WARNING! ${userAccount} does not have a password set.${NORMAL}"
+            printf '%b\n' "${BOLD}${YELLOW}WARNING! ${userAccount} does not have a password set.${RESET}"
         ;;
         (P?(S))
-            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} has a password set.${NORMAL}"
+            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} has a password set.${RESET}"
         ;;
         (L?(K))
-            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} account is locked.${NORMAL}"
+            printf '%b\n' "${BOLD}${GREEN}OK! ${userAccount} account is locked.${RESET}"
         ;;
     esac
 done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
