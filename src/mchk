@@ -29,7 +29,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 # Check for non-system accounts without a password.
 shopt -s extglob
 
-printf "Checking accounts...\n"
+printf "Checking accounts...\n\n"
 
 while read -r userAccount; do
 
@@ -68,9 +68,9 @@ case "${ID_LIKE:-$ID}" in
     ;;
 esac
 
-printf "\nOpen ports:\n"; {
+printf "\nOpen ports:\n\n"; {
 
     ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq
 }
 
-{ printf "Disk used:\n"; df -h / | tail -1 | awk '{print $5}'; }
+{ printf "Disk used:\n\n"; df -h / | tail -1 | awk '{print $5}'; }
