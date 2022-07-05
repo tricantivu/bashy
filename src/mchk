@@ -22,7 +22,7 @@ printError() {
 }
 
 # Constants
-readonly GREEN="\e[38;5;46m" LIGHT_RED="\e[91m" NORMAL="\e[0m"
+readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" NORMAL="\e[0m"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
@@ -37,7 +37,7 @@ while read -r userAccount; do
 
     case "${passwordStatus}" in
         (NP)
-            printf '%b\n' "${LIGHT_RED}WARNING! ${userAccount} does not have a password set.${NORMAL}"
+            printf '%b\n' "${YELLOW}WARNING! ${userAccount} does not have a password set.${NORMAL}"
         ;;
         (P?(S))
             printf '%b\n' "${GREEN}OK! ${userAccount} has a password set.${NORMAL}"
