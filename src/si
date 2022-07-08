@@ -24,6 +24,11 @@ readonly LIGHT_RED="\e[91m" LIGHT_GREEN="\e[92m" LIGHT_YELLOW="\e[93m" LIGHT_BLU
 # Global variables
 . /etc/os-release
 
+# Locale configuration
+unset LANGUAGE LC_ALL
+
+export LC_MESSAGES='en_US.UTF-8'
+
 # Functions
 welcomeMessage() {
     printf "${LIGHT_RED}System information for:${COLOR_END} ${LIGHT_YELLOW}${USER}${COLOR_END}${LIGHT_GREEN}@${COLOR_END}${LIGHT_BLUE}${HOSTNAME}${COLOR_END}\n\n"     # Use some rainbow colors in the message.
