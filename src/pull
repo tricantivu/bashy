@@ -26,9 +26,9 @@ scriptName="${0##*/}"
 readonly EX_USAGE=64 EX_UNAVAILABLE=69 TMPFILE="$(mktemp --quiet --suffix='.tmp' "${scriptName}".XXXXX)"
 
 # Locale configuration
-unset LANGUAGE
+unset LANGUAGE LC_ALL
 
-export LC_ALL='en_US.UTF-8'
+export LC_MESSAGES='en_US.UTF-8'
 
 trap 'rm ${TMPFILE} &> /dev/null' EXIT
 
