@@ -68,7 +68,7 @@ fedoraCount() {
         ;;
         (yum)
 
-            printf 'Packages: '; grep -Evc 'Installed Packages' < <(yum list installed)
+            printf 'Packages: '; grep -vc 'Installed Packages' < <(yum list installed)
         ;;
     esac
 
