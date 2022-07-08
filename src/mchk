@@ -61,7 +61,20 @@ case "${ID_LIKE:-$ID}" in
         { sudo apt-get -y update && sudo apt-get -y upgrade; } 2>&-
     ;;
     (fedora)
-        sudo dnf -y up 2>&- || sudo yum -y update 2>&-
+        # Gets a list of paths to dnf and yum binaries
+        packageManagers=("$(type -P dnf yum 2>&-)")
+
+        (( "${#packageManagers[@]}" == 0 )) && {
+
+            printError "No package managers available to check for updates."
+
+            exit 1
+        }
+
+        # First package manager available in the system.
+        packageManager="${packageManagers[0]}"
+
+        sudo "${packageManager}" update
     ;;
     (*)
         printError "Could not check for updates.\n"

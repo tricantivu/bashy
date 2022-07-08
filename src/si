@@ -34,8 +34,40 @@ debianCount() {
 }
 
 fedoraCount() {
-    printf 'Packages: '; wc -l < <(dnf list --installed) || \
-    printf 'Packages: '; wc -l < <(yum list --installed)                                                                                                               # Fallback to yum
+    local TMP_FILE="/tmp/temporaryFile"
+
+    type -P dnf yum 2>&- > "${TMP_FILE}"
+
+    # Write each line of the file to an array
+    packageManagers=()
+
+    while read -r packageManager; do
+        packageManagers+=("${packageManager}")
+
+    done < <(cat "${TMP_FILE}")
+
+    # Abort when no package managers are installed.
+    (( "${#packageManagers[@]}" == 0 )) && {
+
+        printf '%s\n' "Packages: N/A"
+
+        rm "${TMP_FILE}"
+
+        return 1
+    }
+
+    case "${packageManagers[0]##*/}" in
+        (dnf)
+
+            printf 'Packages: '; wc -l < <(dnf list --installed)
+        ;;
+        (yum)
+
+            printf 'Packages: '; grep -Evc 'Installed Packages' < <(yum list installed)
+        ;;
+    esac
+
+    rm "${TMP_FILE}"
 }
 
 archCount() {
