@@ -74,7 +74,7 @@ case "${ID_LIKE:-$ID}" in
         # First package manager available in the system.
         packageManager="${packageManagers[0]}"
 
-        sudo "${packageManager}" update
+        sudo "${packageManager}" -y update
     ;;
     (*)
         printError "Could not check for updates.\n"
