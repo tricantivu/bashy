@@ -110,7 +110,7 @@ getShell() {
     printf "%s\n" "Shell: ${SHELL##*/}"
 }
 
-osInfo() {
+osInformation() {
     local operatingSystem kernelRelease
 
     # Parse OS name.
@@ -130,7 +130,7 @@ osInfo() {
 
 welcomeMessage
 getShell
-osInfo
+osInformation
 packageCount
 getDistribution
 
