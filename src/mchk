@@ -72,7 +72,7 @@ case "${ID_LIKE:-$ID}" in
         }
 
         # First package manager available in the system.
-        packageManager="${packageManagers[0]}"
+        packageManager="${packageManagers[0]##*/}"
 
         sudo "${packageManager}" -y update
     ;;
