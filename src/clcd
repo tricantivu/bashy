@@ -30,7 +30,7 @@ printError() {
     printf -- "$1\n" >&2
 }
 
-readonly CACHE_DIR="${HOME}/.cache"
+readonly CACHE_DIR="${XDG_CACHE_HOME:=$HOME/.cache}"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
