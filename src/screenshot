@@ -44,7 +44,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 }
 
 # Check if there is a configured display.
-[[ -z "${DISPLAY}" ]] || {
+[[ -z "${DISPLAY}" ]] && {
 
     printError "No display to take a screenshot of."
 
