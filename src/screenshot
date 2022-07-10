@@ -57,7 +57,9 @@ shopt -s extglob
 # shellcheck disable=SC2016
 case "$1" in
     (h?(elp))
-        { usage; exit 0; }
+        usage
+
+        exit 0
     ;;
     (g?(rab))
         scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
