@@ -17,9 +17,11 @@
 # Place, Suite 330, Boston, MA 02111-1307 USA
 
 trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
+trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
 
 # Constants
 readonly LIGHT_RED="\e[91m" LIGHT_GREEN="\e[92m" LIGHT_YELLOW="\e[93m" LIGHT_BLUE="\e[94m" COLOR_END="\e[0m"                                                           # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
+readonly TMP_FILE="/tmp/temporaryFile"
 
 # Global variables
 . /etc/os-release
@@ -39,8 +41,6 @@ debianCount() {
 }
 
 fedoraCount() {
-    local TMP_FILE="/tmp/temporaryFile"
-
     type -P dnf yum 2>&- > "${TMP_FILE}"
 
     # Write each line of the file to an array
@@ -56,8 +56,6 @@ fedoraCount() {
 
         printf '%s\n' "Packages: N/A"
 
-        rm "${TMP_FILE}"
-
         return 1
     }
 
@@ -71,8 +69,6 @@ fedoraCount() {
             printf 'Packages: '; grep -vc 'Installed Packages' < <(yum list installed)
         ;;
     esac
-
-    rm "${TMP_FILE}"
 }
 
 archCount() {
