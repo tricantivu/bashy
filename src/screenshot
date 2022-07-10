@@ -67,7 +67,7 @@ case "$1" in
     (n?(ormal))
         normalMode='true'
     ;;
-    (+([[:blank:]]) | '')
+    (+([[:cntrl:]]) | '')
         printError "No mode was selected."
 
         exit 1

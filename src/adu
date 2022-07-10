@@ -66,7 +66,7 @@ case "$1" in
 
         exit 0
     ;;
-    (+([[:blank:]]) | '')
+    (+([[:cntrl:]]) | '')
         showError "No operation was specified."
 
         exit 1
