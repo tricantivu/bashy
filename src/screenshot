@@ -62,22 +62,10 @@ case "$1" in
         exit 0
     ;;
     (g?(rab))
-        scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
-            notify-send 'Screenshot was aborted.'
-
-            exit 1
-        }
-
-        notify-send 'Screenshot taken'
+        grabMode='true'
     ;;
     (n?(ormal))
-        scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
-            notify-send 'Could not take screenshot.'
-
-            exit 1
-        }
-
-        notify-send 'Screenshot taken!'
+        normalMode='true'
     ;;
     (+([[:blank:]]) | '')
         printError "No mode was selected."
@@ -92,5 +80,24 @@ case "$1" in
         exit 1
     ;;
 esac
+
+# Take screenshot
+${grabMode:-false} && {
+    scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+        notify-send 'Screenshot was aborted.'
+
+        exit 1
+    }
+}
+
+${normalMode:-false} && {
+    scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+        notify-send 'Could not take screenshot.'
+
+        exit 1
+    }
+}
+
+notify-send 'Screenshot taken'
 
 trap &> /dev/null
