@@ -100,7 +100,7 @@ processEnvironment() {
             continue
         }
 
-        ((environmentVariables++))
+        (( environmentVariables++ ))
     done <<< "${processVariables}"
 
     (( ${environmentVariables} == 0 )) && {
@@ -124,7 +124,7 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 optionCount=0
 
 while getopts ':p:h' OPTION; do
-    ((optionCount++))
+    (( optionCount++ ))
 
     case "${OPTION}" in
         (p)

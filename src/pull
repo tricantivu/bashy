@@ -49,21 +49,21 @@ for localRepository in "$@"; do
     [[ -e "${localRepository}" ]] || {
 
         printError "Repository \"${localRepository}\" does not exist."
-        ((failedPulls++))
+        (( failedPulls++ ))
         continue
     }
 
     [[ -d "${localRepository}" ]] || {
 
         printError "Repository \"${localRepository}\" is not a directory."
-        ((failedPulls++))
+        (( failedPulls++ ))
         continue
     }
 
     [[ -x "${localRepository}" ]] || {
 
         printError "Repository's directory \"${localDirectory}\" can not be accessed, please change its permissions."
-        ((failedPulls++))
+        (( failedPulls++ ))
         continue
     }
 

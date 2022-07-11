@@ -91,7 +91,7 @@ failedOperations=0
             printf 'Successfully deleted user %s.\n' "${ARGUMENT}"
         else
             showError "Could not delete user \"${ARGUMENT}\"."
-            ((failedOperations++))
+            (( failedOperations++ ))
             continue
         fi
     done
@@ -104,7 +104,7 @@ failedOperations=0
             printf "Successfully added user %s.\n" "${ARGUMENT}"
         else
             showError "Could not add user \"${ARGUMENT}\"."
-            ((failedOperations++))
+            (( failedOperations++ ))
             continue
         fi
     done
