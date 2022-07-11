@@ -106,7 +106,7 @@ for fileName in "$@"; do
     printf '%s\n' "File \"${fileName}\" created successfully."
 done
 
-((failedWrites >= 1)) && {
+[ ${failedWrites} -ge 1 ] && {
 
     exit ${EX_CANTCREAT}
 }
