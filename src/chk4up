@@ -4,6 +4,8 @@ printError() {
     printf "$1\n" >&2
 }
 
+scriptName="${0##*/}"
+
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 type -P pamac &> /dev/null || {
@@ -21,18 +23,18 @@ ping -c 3 manjaro.org &> /dev/null || {
 pamac checkupdates --aur &> /dev/null
 
 if [[ $? -eq 100 ]]; then
-    notify-send "${0##*/}" "System updates are available, applying them!"
+    notify-send "${scriptName}" "System updates are available, applying them!"
 
     pamac upgrade --aur --no-confirm &> /dev/null || {
 
-        notify-send "${0##*/}" "Updates could not be applied, pamac failed."
+        notify-send "${scriptName}" "Updates could not be applied, pamac failed."
 
         exit 1
     }
 
-    notify-send "${0##*/}" "Updates applied successfully!"
+    notify-send "${scriptName}" "Updates applied successfully!"
 else
-    notify-send "${0##*/}" "No system updates are available!"
+    notify-send "${scriptName}" "No system updates are available!"
 fi
 
 trap &> /dev/null
