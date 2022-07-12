@@ -28,7 +28,12 @@ Collection of shell scripts.
 
 # Installation
 0. Open a terminal window.
-1. Clone the repository `git clone https://github.com/tricantivu/bashy.git`.
+1. Clone the repository
+
+
+`git clone https://github.com/tricantivu/bashy.git`.
+
+
 2. Open the .bashrc file in your home directory.
 3. Prepend the absolute path of the cloned repository to the PATH environment variable as follows:
 
