@@ -23,13 +23,23 @@ printError() {
 
 # Constants
 readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" BOLD="\e[1m" RESET="\e[0m"
+readonly TMP_FILE1="/tmp/passwd.1" TMP_FILE2="/tmp/passwd.2"
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap 'rm "${TMP_FILE1}" "${TMP_FILE2}" &> /dev/null' EXIT
 
 # Check for non-system accounts without a password.
 shopt -s extglob
 
 printf "Checking accounts...\n\n"
+
+# Parse account information file.
+
+# Create file without system accounts.
+sed -r "/nologin|false/d" /etc/passwd > "${TMP_FILE1}"
+
+# Get fields corresponding to usernames.
+cut -d ':' -f 1 "${TMP_FILE1}" > "${TMP_FILE2}"
 
 while read -r userAccount; do
 
@@ -46,7 +56,7 @@ while read -r userAccount; do
             printf '%b\n' "${BOLD}${GREEN}OK!${RESET} ${userAccount} account is locked."
         ;;
     esac
-done < <(sed -r "/nologin|false/d" /etc/passwd | cut -d ':' -f 1)
+done < "${TMP_FILE2}"
 
 # Check for package updates and apply them if any are available.
 . /etc/os-release

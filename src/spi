@@ -68,7 +68,7 @@ processStatus() {
             break
         }
 
-    done < <(cat "/proc/${PID}/status")
+    done < "/proc/${PID}/status"
 }
 
 processFDs() {

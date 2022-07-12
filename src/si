@@ -49,7 +49,7 @@ fedoraCount() {
     while read -r packageManager; do
         packageManagers+=("${packageManager}")
 
-    done < <(cat "${TMP_FILE}")
+    done < "${TMP_FILE}"
 
     # Abort when no package managers are installed.
     (( "${#packageManagers[@]}" == 0 )) && {
