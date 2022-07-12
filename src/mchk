@@ -86,4 +86,7 @@ printf "\nOpen ports:\n\n"; {
     ss -Hutnl | awk '{print $5}' | cut -d : -f 2 | sort -nr | uniq
 }
 
-{ printf "Disk used:\n\n"; df -h / | tail -1 | awk '{print $5}'; }
+printf "Disk used:\n\n"; {
+
+    df -h / | tail -1 | awk '{print $5}'
+}
