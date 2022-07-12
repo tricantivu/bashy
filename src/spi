@@ -30,6 +30,13 @@ Available options:
 
     -h
         Show script usage.
+
+Caveats:
+
+${scriptName} heavily relies on information from proc(5)
+and if it is mounted with the hidepid option and has the
+values 1 or 2, ${scriptName} might show incomplete or no
+output at all.
 USAGE
 }
 
