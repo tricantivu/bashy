@@ -21,12 +21,15 @@ printError() {
     printf "$1\n" >&2
 }
 
+# Global variable(s)
+scriptName="${0##*/}"
+
 # Constants
 readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" BOLD="\e[1m" RESET="\e[0m"
-readonly TMP_FILE1="/tmp/passwd.1" TMP_FILE2="/tmp/passwd.2"
+readonly TMP_FILES=("$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")" "$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")")
 
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
-trap 'rm "${TMP_FILE1}" "${TMP_FILE2}" &> /dev/null' EXIT
+trap 'rm "${TMP_FILES[@]}" &> /dev/null' EXIT
 
 # Check for non-system accounts without a password.
 shopt -s extglob
@@ -36,10 +39,10 @@ printf "Checking accounts...\n\n"
 # Parse account information file.
 
 # Create file without system accounts.
-sed -r "/nologin|false/d" /etc/passwd > "${TMP_FILE1}"
+sed -r "/nologin|false/d" /etc/passwd > "${TMP_FILES[0]}"
 
 # Get fields corresponding to usernames.
-cut -d ':' -f 1 "${TMP_FILE1}" > "${TMP_FILE2}"
+cut -d ':' -f 1 "${TMP_FILES[0]}" > "${TMP_FILES[1]}"
 
 while read -r userAccount; do
 
@@ -56,7 +59,7 @@ while read -r userAccount; do
             printf '%b\n' "${BOLD}${GREEN}OK!${RESET} ${userAccount} account is locked."
         ;;
     esac
-done < "${TMP_FILE2}"
+done < "${TMP_FILES[1]}"
 
 # Check for package updates and apply them if any are available.
 . /etc/os-release
