@@ -23,14 +23,20 @@ printError() {
 scriptName="${0##*/}"
 
 # Constants
-readonly EX_USAGE=64 EX_UNAVAILABLE=69 TMPFILE="$(mktemp --quiet --suffix='.tmp' "${scriptName}".XXXXX)"
+readonly EX_USAGE=64 EX_UNAVAILABLE=69
+
+TMP_FILE=''
+
+TMP_FILE="$(mktemp --quiet --suffix='.tmp' "${scriptName}".XXXXX)"
+
+declare -r TMP_FILE
 
 # Locale configuration
 unset LANGUAGE LC_ALL
 
 export LC_MESSAGES='en_US.UTF-8'
 
-trap 'rm ${TMPFILE} &> /dev/null' EXIT
+trap 'rm ${TMP_FILE} &> /dev/null' EXIT
 
 # Verify script usage.
 [[ $# -eq 0 ]] && {
@@ -72,14 +78,14 @@ for localRepository in "$@"; do
     # shellcheck disable=SC2164
     cd "${localRepository}"
 
-    git pull > "${TMPFILE}" || {
+    git pull > "${TMP_FILE}" || {
 
         printError "Could not pull changes from \"${localRepository}\" repository."
         (( failedPulls++ ))
         continue
     }
 
-    grep -qx 'Already up to date.' "${TMPFILE}" && {
+    grep -qx 'Already up to date.' "${TMP_FILE}" && {
 
         printf 'Nothing to pull, repository \"%s\" is up to date with all changes.\n' "${localRepository}"
         continue

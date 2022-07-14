@@ -17,17 +17,20 @@
 # Place, Suite 330, Boston, MA 02111-1307 USA
 
 # Global variable(s)
+. /etc/os-release
 scriptName="${0##*/}"
 
 # Constants
 readonly LIGHT_RED="\e[91m" LIGHT_GREEN="\e[92m" LIGHT_YELLOW="\e[93m" LIGHT_BLUE="\e[94m" COLOR_END="\e[0m"                                                           # (Reference: https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4)
-readonly TMP_FILE="$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")"
+
+TMP_FILE=''
+
+TMP_FILE="$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")"
+
+declare -r TMP_FILE
 
 trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
 trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
-
-# Global variables
-. /etc/os-release
 
 # Locale configuration
 unset LANGUAGE LC_ALL
