@@ -19,6 +19,11 @@ printError() {
     printf "$1\n" >&2
 }
 
+# Locale configuration
+unset LANGUAGE LC_ALL
+
+export LC_MESSAGES='en_US.UTF-8'
+
 # Global variable(s)
 scriptName="${0##*/}"
 
@@ -31,11 +36,7 @@ TMP_FILE="$(mktemp --quiet --suffix='.tmp' "${scriptName}".XXXXX)"
 
 declare -r TMP_FILE
 
-# Locale configuration
-unset LANGUAGE LC_ALL
-
-export LC_MESSAGES='en_US.UTF-8'
-
+# Trap(s)
 trap 'rm ${TMP_FILE} &> /dev/null' EXIT
 
 # Verify script usage.

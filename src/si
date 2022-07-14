@@ -16,6 +16,11 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA 02111-1307 USA
 
+# Locale configuration
+unset LANGUAGE LC_ALL
+
+export LC_MESSAGES='en_US.UTF-8'
+
 # Global variable(s)
 . /etc/os-release
 scriptName="${0##*/}"
@@ -29,13 +34,9 @@ TMP_FILE="$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")"
 
 declare -r TMP_FILE
 
+# Traps
 trap '{ printf "%b\n" "\nScript was interrupted."; exit 1; }' SIGINT
 trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
-
-# Locale configuration
-unset LANGUAGE LC_ALL
-
-export LC_MESSAGES='en_US.UTF-8'
 
 # Functions
 welcomeMessage() {
