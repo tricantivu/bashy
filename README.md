@@ -68,6 +68,9 @@ Collection of shell scripts.
 * mchk - Show open ports, disk usage, checks for updates and user accounts without passwords for Arch/Debian/RHEL based distributions.
 
 
+![GIF4](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/mchk.gif)
+
+
 * chk4up - pamac wrapper to check for updates in packages installed from the AUR.
 
 
@@ -77,7 +80,13 @@ Collection of shell scripts.
 * clcd - Clears one or more ~/.cache directories.
 
 
+![GIF6](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/clcd.gif)
+
+
 * si - Shows some (shell, operating system, kernel, architecture, amount of installed packages, and distribution name) system information.
+
+
+![GIF7](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/si.gif)
 
 
 * adu - user(add|del) wrapper script to add or delete multiple users.
@@ -114,3 +123,21 @@ Collection of shell scripts.
 
 
 ![GIF13](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/wallee.gif)
+
+
+* f - Write regular files.
+
+
+![GIF14](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/f.gif)
+
+
+* pull - Pull changes from multiple Git repositories.
+
+
+![GIF15](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/pull.gif)
+
+
+* che - Change account expiration dates with relative time units.
+
+
+![GIF15](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/che.gif)
