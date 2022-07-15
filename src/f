@@ -85,21 +85,21 @@ for fileName in "$@"; do
     pathchk "${fileName}" 1> /dev/null 2>&1 || {
         printError "Invalid filename \"${fileName}\"."
 
-        failedWrites=${failedWrites}+1
+        failedWrites=$(( failedWrites + 1 ))
         continue
     }
 
     [ -e "${fileName}" ] && {
         printError "File \"${fileName}\" already exists."
 
-        failedWrites=${failedWrites}+1
+        failedWrites=$(( failedWrites + 1 ))
         continue
     }
 
     : > "${fileName}" 2>&- || {
         printError "Could not create file."
 
-        failedWrites=${failedWrites}+1
+        failedWrites=$(( failedWrites + 1 ))
         continue
     }
 
