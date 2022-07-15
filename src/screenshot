@@ -81,9 +81,12 @@ case "$1" in
     ;;
 esac
 
+# shellcheck disable=SC2016
+screenshotFilename='screenshot-%d-%m-%Y-$wx$h.png'
+
 # Take screenshot
 ${grabMode:-false} && {
-    scrot -s -f -l color=${IMPERIAL_RED},width=5 -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+    scrot -s -f -l color=${IMPERIAL_RED},width=5 -F "${screenshotFilename}" &> /dev/null || {
         notify-send 'Screenshot was aborted.'
 
         exit 1
@@ -91,7 +94,7 @@ ${grabMode:-false} && {
 }
 
 ${normalMode:-false} && {
-    scrot -F 'screenshot-%d-%m-%Y-$wx$h.png' &> /dev/null || {
+    scrot -F "${screenshotFilename}" &> /dev/null || {
         notify-send 'Could not take screenshot.'
 
         exit 1
