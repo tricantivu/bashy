@@ -29,8 +29,6 @@ printError() {
 feedsFile="${HOME}/.newsboat/urls"
 
 # Constant(s)
-readonly LIGHT_YELLOW_FG='\e[38;5;11m' RESET='\e[0m'
-
 trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && {
@@ -39,11 +37,6 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
     usage
 
     exit 1
-}
-
-[[ -e "${feedsFile}" ]] || {
-
-    printf "${LIGHT_YELLOW_FG}Warning!${RESET} Feeds file used by Newsboat \"${feedsFile}\" does not exist, it will be created now.\n"
 }
 
 newsboatPath="${feedsFile%'/urls'}"
