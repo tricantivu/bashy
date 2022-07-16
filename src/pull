@@ -32,12 +32,12 @@ readonly EX_USAGE=64 EX_UNAVAILABLE=69
 
 TMP_FILE=''
 
-TMP_FILE="$(mktemp --quiet --suffix='.tmp' "${scriptName}".XXXXX)"
+TMP_FILE="$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")"
 
 declare -r TMP_FILE
 
 # Trap(s)
-trap 'rm ${TMP_FILE} &> /dev/null' EXIT
+trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
 
 # Verify script usage.
 [[ $# -eq 0 ]] && {
