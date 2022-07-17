@@ -122,7 +122,7 @@ osInformation() {
             operatingSystem='GNU/Linux'
         ;;
         (*)
-            operatingSystem="${OSTYPE}"
+            operatingSystem='N/A'
         ;;
     esac
 
