@@ -47,7 +47,7 @@ printError() {
 processName() {
     local processName
 
-    read -r processName < "/proc/${PID}/comm"
+    read -r processName 2>&- < "/proc/${PID}/comm"
 
     printf 'Process: %s\n' "${processName}"
 }
@@ -68,7 +68,7 @@ processStatus() {
             break
         }
 
-    done < "/proc/${PID}/status"
+    done 2>&- < "/proc/${PID}/status"
 }
 
 processFDs() {

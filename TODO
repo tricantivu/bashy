@@ -8,4 +8,3 @@
 
 Add option to set file permissions (f).
 Show prompt after arguments are validated (clcd).
-Mute error messages when getting status and command line (spi). 
