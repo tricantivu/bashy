@@ -68,7 +68,7 @@ done
 
 (( "${#validDirectories[@]}" == 0 )) && {
 
-    printError "All arguments are invalid."
+    printError "\nAll arguments are invalid."
 
     exit 1
 }
