@@ -42,7 +42,7 @@ trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
 # Verify script usage.
 [[ $# -eq 0 ]] && {
 
-    printError "No repositories to pull changes from.\n"
+    printError "[\e[1m\e[38;5;196mERROR\e[0m] No repositories to pull changes from.\n"
 
     usage
 
@@ -55,21 +55,21 @@ failedPulls=0
 for localRepository in "$@"; do
     [[ -e "${localRepository}" ]] || {
 
-        printError "Repository \"${localRepository}\" does not exist."
+        printError "[\e[1m\e[38;5;196mERROR\e[0m] Repository \"${localRepository}\" does not exist."
         (( failedPulls++ ))
         continue
     }
 
     [[ -d "${localRepository}" ]] || {
 
-        printError "Repository \"${localRepository}\" is not a directory."
+        printError "[\e[1m\e[38;5;196mERROR\e[0m] Repository \"${localRepository}\" is not a directory."
         (( failedPulls++ ))
         continue
     }
 
     [[ -x "${localRepository}" ]] || {
 
-        printError "Repository's directory \"${localDirectory}\" can not be accessed, please change its permissions."
+        printError "[\e[1m\e[38;5;196mERROR\e[0m] Repository's directory \"${localRepository}\" is unaccesible."
         (( failedPulls++ ))
         continue
     }
@@ -81,23 +81,23 @@ for localRepository in "$@"; do
 
     git pull > "${TMP_FILE}" || {
 
-        printError "Could not pull changes from \"${localRepository}\" repository."
+        printError "[\e[1m\e[38;5;196mERROR\e[0m] Could not pull changes from \"${localRepository}\" repository."
         (( failedPulls++ ))
         continue
     }
 
     grep -qx 'Already up to date.' "${TMP_FILE}" && {
 
-        printf 'Nothing to pull, repository \"%s\" is up to date with all changes.\n' "${localRepository}"
+        printf '[\e[1m\e[38;5;255mNOTE\e[0m] Repository \"%s\" is up to date.\n' "${localRepository}"
         continue
     }
 
-    printf 'Changes pulled successfully from repository \"%s\".\n' "${localRepository}"
+    printf '[\e[1m\e[38;5;118mSUCCESS\e[0m] Changes pulled from repository \"%s\".\n' "${localRepository}"
 done
 
 [[ $# -eq ${failedPulls} ]] && {
 
-    printError "\nChanges could not be pulled from any repository."
+    printError "\n[\e[1m\e[38;5;196mERROR\e[0m] Changes could not be pulled from any repository."
     exit ${EX_UNAVAILABLE}
 }
 
