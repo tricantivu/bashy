@@ -24,7 +24,7 @@ printError() {
 
 readonly IMPERIAL_RED='#ED2939'
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check that the user chooses only one mode.
 [[ $# -eq 0 ]] && {

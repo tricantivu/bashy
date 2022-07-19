@@ -43,7 +43,7 @@ checkRunning() {
 # Global variables
 newsboatFeeds='feeds.opml' calcurseData='calendarData.ical'
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check dependencies.
 type -P calcurse newsboat &> /dev/null || {

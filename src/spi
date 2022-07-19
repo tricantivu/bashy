@@ -125,7 +125,7 @@ processOwnership() {
     stat --printf "Ownership of PID ${PID}:\n\nGroup: %G (GID: %g)\tOwner: %U (UID: %u)\n\n" "/proc/${PID}"
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
 optionCount=0

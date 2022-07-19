@@ -29,7 +29,7 @@ printError() {
     printf "$1\n" >&2
 }
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Check if there is a configured display.
 [[ -z "${DISPLAY}" ]] && {

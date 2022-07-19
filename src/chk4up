@@ -6,7 +6,7 @@ printError() {
 
 scriptName="${0##*/}"
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 type -P pamac &> /dev/null || {
     printError 'pamac is not installed!'

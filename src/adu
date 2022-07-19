@@ -41,7 +41,7 @@ showError() {
     printf "$1\n" >&2
 }
 
-trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ showError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse arguments.
 [[ $# -eq 0 ]] && {

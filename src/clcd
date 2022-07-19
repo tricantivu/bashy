@@ -32,7 +32,7 @@ printError() {
 
 readonly CACHE_DIR="${XDG_CACHE_HOME:=$HOME/.cache}"
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && {
     printError "No arguments were given!\n"

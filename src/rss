@@ -29,7 +29,7 @@ printError() {
 feedsFile="${HOME}/.newsboat/urls"
 
 # Constant(s)
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 [[ $# -eq 0 ]] && {
     printError "No feeds to add.\n"

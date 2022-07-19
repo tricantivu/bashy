@@ -28,7 +28,7 @@ scriptName="${0##*/}"
 readonly GREEN="\e[38;5;46m" YELLOW="\e[38;5;226m" BOLD="\e[1m" RESET="\e[0m"
 readonly TMP_FILES=("$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")" "$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")")
 
-trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printError "\n\nScript was interrupted."; exit 1; }' SIGINT
 trap 'rm "${TMP_FILES[@]}" &> /dev/null' EXIT
 
 # Check for non-system accounts without a password.

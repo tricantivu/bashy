@@ -84,7 +84,7 @@ download() {
 
 readonly DEFAULT_DIR='/tmp'
 
-trap '{ showError "\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ showError "\n\nScript was interrupted."; exit 1; }' SIGINT
 
 # Parse options.
 optionCount=0
