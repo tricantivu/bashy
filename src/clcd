@@ -76,10 +76,10 @@ done
 # Deletion confirmation.
 shopt -s nocasematch extglob
 
-read -r -p 'Delete contents of subdirectories? [Y/N] '
+read -r -p "Are you sure you want to clear ${@@Q} [Y/N] "
 
 until [[ "${REPLY}" == @(Y|N|[[:blank:]]) ]]; do
-    read -r -p 'Invalid reply to prompt, try again. '
+    read -r -p 'Invalid reply to confirmation, try again. '
 done
 
 [[ "${REPLY}" == N ]] && {
