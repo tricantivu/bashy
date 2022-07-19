@@ -35,7 +35,7 @@ TMP_FILE="$(mktemp --quiet --suffix='.tmp' "/tmp/${scriptName}.XXXXX")"
 declare -r TMP_FILE
 
 # Traps
-trap '{ printf "%b\n" "\n\nScript was interrupted."; exit 1; }' SIGINT
+trap '{ printf "\n\nScript was interrupted.\n"; exit 1; }' SIGINT
 trap 'rm "${TMP_FILE}" &> /dev/null' EXIT
 
 # Functions
