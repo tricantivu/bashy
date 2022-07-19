@@ -59,7 +59,7 @@ newsboatPath="${feedsFile%'/urls'}"
 
     printf '%s\n' "$@" >> "${feedsFile}"
 
-    exit $?
+    exit
 }
 
 printf '%s\n' "$@" > "${feedsFile}"
