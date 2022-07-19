@@ -42,7 +42,38 @@ trap '{ printError "\nScript was interrupted."; exit 1; }' SIGINT
     exit 1
 }
 
-# Prompt user for a confirmation before deletion.
+# Validate arguments
+validDirectories=()
+
+for scriptArgument in "$@"; do
+    cacheSubdirectory="${CACHE_DIR}/${scriptArgument##*/}"
+
+    [[ -e "${cacheSubdirectory}" ]] || {
+        printError "${scriptArgument} can not be emptied, it does not exist."
+        continue
+    }
+
+    [[ -d "${cacheSubdirectory}" ]] || {
+        printError "${scriptArgument} is not a directory inside ${CACHE_DIR}"
+        continue
+    }
+
+    find "${cacheSubdirectory}" | grep -qvx -- "${cacheSubdirectory}" || {
+        printError "${scriptArgument} is empty, nothing to delete."
+        continue
+    }
+
+    validDirectories+=("${cacheSubdirectory}")
+done
+
+(( "${#validDirectories[@]}" == 0 )) && {
+
+    printError "All arguments are invalid."
+
+    exit 1
+}
+
+# Deletion confirmation.
 shopt -s nocasematch extglob
 
 read -r -p 'Delete contents of subdirectories? [Y/N] '
@@ -56,27 +87,12 @@ done
     exit 1
 }
 
-# Delete contents.
-for ARGUMENT in "$@"; do
-    cacheSubdirectory="${CACHE_DIR}/${ARGUMENT##*/}"
+# Clear contents.
 
-    [[ -e "${cacheSubdirectory}" ]] || {
-        printError "${ARGUMENT} can not be emptied, it does not exist."
-        continue
-    }
+# shellcheck disable=SC2115
+for validDirectory in "${validDirectories[@]}"; do
 
-    [[ -d "${cacheSubdirectory}" ]] || {
-        printError "${ARGUMENT} is not a directory inside ${CACHE_DIR}"
-        continue
-    }
-
-    find "${cacheSubdirectory}" | grep -qvx -- "${cacheSubdirectory}" || {
-        printError "${ARGUMENT} is empty, nothing to delete."
-        continue
-    }
-
-    # shellcheck disable=SC2115
-    rm -r -- "${cacheSubdirectory}"/* &> /dev/null
+    rm -r -- "${validDirectory}"/* &> /dev/null
 done
 
 trap &> /dev/null
