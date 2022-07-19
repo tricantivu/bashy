@@ -76,7 +76,7 @@ done
 # Deletion confirmation.
 shopt -s nocasematch extglob
 
-read -r -p "Are you sure you want to clear ${@@Q} [Y/N] "
+read -r -p "Are you sure you want to clear ${validDirectories[@]@Q} [Y/N] "
 
 until [[ "${REPLY}" == @(Y|N|[[:blank:]]) ]]; do
     read -r -p 'Invalid reply to confirmation, try again. '
