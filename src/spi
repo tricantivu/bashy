@@ -59,14 +59,22 @@ processName() {
 processStatus() {
     local fileLine
 
+    # Parse the status.
     while read -r fileLine; do
         [[ "${fileLine}" == State:* ]] && {
-            # Parse the status.
-            prefixRemoved="${fileLine#State:}"
-            tabRemoved="${prefixRemoved##$'\t'}"
-            letterRemoved="${tabRemoved#[RSDZTItWXxKP]' '}"
-            parenthesisRemoved="${letterRemoved//[()]/}"
-            processStatus="${parenthesisRemoved^}"
+            processStatus="${fileLine#State:}"
+
+            # Remove tabs at the beginning.
+            processStatus="${processStatus##$'\t'}"
+
+            # Remove a space and letter (from the square brackets) at the beginning.
+            processStatus="${processStatus#[RSDZTItWXxKP]' '}"
+
+            # Remove parenthesis.
+            processStatus="${processStatus//[()]/}"
+
+            # Capitalize first letter.
+            processStatus="${processStatus^}"
 
             printf 'Status: %s\n' "${processStatus:-?}"
 
