@@ -91,13 +91,14 @@ esac
 }
 
 # Set wallpaper.
-if feh --bg-scale --recursive --randomize -- "${wallpapersDirectory}" 2>&-; then
-    printf '%s\n' "Wallpaper set successfully."
-else
+feh --bg-scale --recursive --randomize -- "${wallpapersDirectory}" 2>&- || {
+
     printError "Could not set wallpaper."
 
     exit 1
-fi
+}
+
+printf '%s\n' "Wallpaper set successfully."
 
 # Remove trap.
 trap &> /dev/null

@@ -141,11 +141,14 @@ DIRECTORY="${DIRECTORY:-$DEFAULT_DIR}"
 }
 
 # Download URLs.
-if ${convertToAudio}; then
+${convertToAudio} && {
+
     download '--extract-audio'
-else
-    download
-fi
+
+    exit
+}
+
+download
 
 # Remove traps
 trap &> /dev/null
