@@ -47,7 +47,7 @@ showError() {
     printf "$1\n" >&2
 }
 
-download() {
+downloadMedia() {
     local failedDownloads=0 URLs
 
     printf '%s\n\n' "Type the URL(s) to download and press Control + D when finished."
@@ -143,12 +143,12 @@ DIRECTORY="${DIRECTORY:-$DEFAULT_DIR}"
 # Download URLs.
 ${convertToAudio} && {
 
-    download '--extract-audio'
+    downloadMedia '--extract-audio'
 
     exit
 }
 
-download
+downloadMedia
 
 # Remove traps
 trap &> /dev/null
