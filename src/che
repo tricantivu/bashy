@@ -137,7 +137,7 @@ done < "${PASSWD_FILE}"
 
     printError "User \"$2\" does not exist."
 
-    exit ${EX_USAGE}
+    exit ${EX_NOUSER}
 }
 
 # Parse unit to a format understandable for date command.
