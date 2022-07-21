@@ -3,23 +3,27 @@ Collection of shell scripts.
 
 
 # Dependencies
-* [Git](https://git-scm.com) 2.36.1
+* [git](https://git-scm.com) 2.36.1
 
 * [feh](https://feh.finalrewind.org) 3.9
+
+* [bash](https://www.gnu.org/software/bash) >= 5.1.16
 
 * [sudo](https://www.sudo.ws) 1.9.11p3
 
 * [scrot](https://github.com/dreamer/scrot) 1.7
 
-* [Pamac](https://gitlab.manjaro.org/applications/pamac) 10.4.1-1
+* [pamac](https://gitlab.manjaro.org/applications/pamac) 10.4.1-1
 
-* [Calcurse](https://www.calcurse.org) 4.8.0
+* [iputils](https://github.com/iputils/iputils) 20211215-1
 
-* [Newsboat](https://newsboat.org) 2.27.0
+* [calcurse](https://www.calcurse.org) 4.8.0
 
-* [GNU Bash](https://www.gnu.org/software/bash) >= 5.1.16
+* [newsboat](https://newsboat.org) 2.27.0
 
-* [GNU Coreutils](https://www.gnu.org/software/coreutils) 9.1
+* [coreutils](https://www.gnu.org/software/coreutils) 9.1
+
+* [procps-ng](https://gitlab.com/procps-ng/procps) 3.3.17-1
 
 * [youtube-dl](https://github.com/ytdl-org/youtube-dl) 2021.12.17
 
