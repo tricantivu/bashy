@@ -102,7 +102,6 @@ shopt -u extglob
 # Argument validation.
 shopt -s nocasematch
 
-# First argument
 [[ "${zerosRemoved}" =~ ^[0-9]+[dmy]$ ]] || {
 
     printError "Invalid time unit \"${zerosRemoved}\"."
@@ -117,17 +116,10 @@ shopt -s nocasematch
     exit ${EX_USAGE}
 }
 
-# Verify required files by chage command exist and have necessary permissions.
+# Check permissions of files required by chage(1).
 [[ -e "${SHADOW_FILE}" && -e "${PASSWD_FILE}" ]] || {
 
-    printError "Can not change expiration date, file ${SHADOW_FILE} or ${PASSWD_FILE} do not exist."
-
-    exit ${EX_OSFILE}
-}
-
-[[ -w "${SHADOW_FILE}" && -w "${PASSWD_FILE}" ]] || {
-
-    printError "Can not change expiration date, files ${SHADOW_FILE} or ${PASSWD_FILE} are not writable."
+    printError "To change expiration date, ${SHADOW_FILE} and ${PASSWD_FILE} must exist."
 
     exit ${EX_OSFILE}
 }
