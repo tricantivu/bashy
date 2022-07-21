@@ -132,14 +132,20 @@ shopt -s nocasematch
     exit ${EX_OSFILE}
 }
 
-# Second argument.
-getent passwd "$2" &> /dev/null
+# Verify user exists.
+while read -r passwdLine; do
 
-(($? == 2)) && {
+    [[ "${passwdLine}" =~ ^"$2" ]] && {
 
-    printError "Can not change expiration date for account \"$2\", it does not exist."
+        break
+    }
+done < "${PASSWD_FILE}"
 
-    exit ${EX_NOUSER}
+[[ -v BASH_REMATCH ]] || {
+
+    printError "User \"$2\" does not exist."
+
+    exit ${EX_USAGE}
 }
 
 # Parse unit to a format understandable for date command.
