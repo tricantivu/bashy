@@ -23,6 +23,10 @@ cat << USAGE
 Description: Show information of a process identifier.
 Usage: ${scriptName} <OPTION> <PID>
 
+A question mark (?) in the output means ${scriptName} lacked
+permissions to get the process's information or there was no
+information to show.
+
 Available options:
 
     -p PID
@@ -49,7 +53,7 @@ processName() {
 
     read -r processName 2>&- < "/proc/${PID}/comm"
 
-    printf 'Process: %s\n' "${processName}"
+    printf 'Process: %s\n' "${processName:-?}"
 }
 
 processStatus() {
@@ -62,8 +66,9 @@ processStatus() {
             tabRemoved="${prefixRemoved##$'\t'}"
             letterRemoved="${tabRemoved#[RSDZTItWXxKP]' '}"
             parenthesisRemoved="${letterRemoved//[()]/}"
+            processStatus="${parenthesisRemoved^}"
 
-            printf 'Status: %s\n' "${parenthesisRemoved^}"
+            printf 'Status: %s\n' "${processStatus:-?}"
 
             break
         }
@@ -76,14 +81,10 @@ processFDs() {
 
     fileDescriptors="$(find "/proc/${PID}/fd" -type l -printf '%f, ' 2>&-)"
 
-    [[ -z "${fileDescriptors}" ]] && {
+    # Remove trailing comma and space.
+    fileDescriptors="${fileDescriptors%, }"
 
-        printError "Can not show PID ${PID}'s file descriptors, lacking permissions or none were opened."
-
-        return 1
-    }
-
-    printf 'Open file descriptors: %s\n\n' "${fileDescriptors%, }"
+    printf 'Open file descriptors: %s\n\n' "${fileDescriptors:-?}"
 }
 
 processCommand() {
@@ -91,33 +92,17 @@ processCommand() {
 
     processCommand="$(tr '\0' ' ' 2>&- < "/proc/${PID}/cmdline")"
 
-    printf 'Command line: %s\n\n' "${processCommand%% }"
+    processCommand="${processCommand%% }"
+
+    printf 'Command line: %s\n\n' "${processCommand:-?}"
 }
 
 processEnvironment() {
-    local processVariables environmentVariables
+    local processVariables
 
     processVariables="$(tr '\0' '\n' 2>&- < "/proc/${PID}/environ")"
 
-    environmentVariables=0
-
-    while read -r environmentVariable; do
-        [[ -z "${environmentVariable}" ]] && {
-
-            continue
-        }
-
-        (( environmentVariables++ ))
-    done <<< "${processVariables}"
-
-    (( ${environmentVariables} == 0 )) && {
-
-        printError "Can not show PID ${PID}'s environment, lacking permissions and/or variables."
-
-        return 1
-    }
-
-    printf 'Environment variables:\n\n%s\n\n' "${processVariables}"
+    printf 'Environment variables:\n\n%s\n\n' "${processVariables:-?}"
 }
 
 processOwnership() {
