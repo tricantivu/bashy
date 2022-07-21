@@ -43,6 +43,9 @@ EXAMPLES
         ${scriptName} 8M bob
 
 EXIT VALUES
+        0
+            Script executed successfully.
+
         64
             Incorrect script usage.
 
@@ -68,7 +71,7 @@ printError() {
     printf -- "$1\n" >&2
 }
 
-readonly EX_USAGE=64 EX_NOUSER=67 EX_UNAVAILABLE=69 EX_OSFILE=72
+readonly EX_OK=0 EX_USAGE=64 EX_NOUSER=67 EX_UNAVAILABLE=69 EX_OSFILE=72
 
 readonly SHADOW_FILE='/etc/shadow' PASSWD_FILE='/etc/passwd'
 
@@ -166,7 +169,7 @@ done
 
     echo "Exiting..."
 
-    exit 0
+    exit ${EX_OK}
 }
 
 shopt -u nocasematch
