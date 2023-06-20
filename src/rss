@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright 2022 Alejandro Cervera
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+usage() {
+
+    local name="${0##*/}"
+
+cat << USAGE
+Description: Add feeds to Newsboat.
+Usage: ${name} URL...
+
+Examples:
+
+${name} "http://rss.cnn.com/rss/edition_world.rss"
+${name} "https://news.ycombinator.com/rss"
+USAGE
+}
+
+err() {
+
+    printf '%s\n' "$*" >&2
+}
+
+prompt() {
+
+    read -r -p $'Would you like to open Newsboat? [Y/N]\n'
+
+    [[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]] && {
+
+        printf '\nExiting...\n'
+
+        exit 0
+    }
+
+    exec newsboat -q 2> /dev/null
+}
+
+feeds="${HOME}/.newsboat/urls"
+
+(( $# )) || {
+
+    err 'No feeds to add.\n'
+
+    usage
+
+    exit 1
+}
+
+cdir="${feeds%'/urls'}"
+
+[[ -d "${cdir}" ]] || {
+
+    err "Couldn't write feeds, missing directory ${cdir@Q}."
+
+    exit 1
+}
+
+[[ -w "${cdir}" ]] || {
+
+    err "${cdir@Q} must be writable."
+
+    exit 1
+}
+
+[[ -w "${feeds}" ]] || {
+
+    err "${feeds@Q} must be writable."
+
+    exit 1
+}
+
+[[ -s "${feeds}" ]] && {
+
+    printf '%s\n' "$@" >> "${feeds}" && {
+
+        prompt
+    }
+}
+
+printf '%s\n' "$@" > "${feeds}" && {
+
+    prompt
+}

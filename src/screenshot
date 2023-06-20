@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+usage() {
+
+cat << USAGE
+Description: scrot wrapper.
+Usage: ${0##*/} -m MODE [-c [COLOR]] [-h]
+
+Available options:
+
+    -m MODE
+        If given "g" or "grab" only a part of the screen will be captured.
+        If given "n" or "normal" the entire screen will be captured.
+
+    -c COLOR
+        When capturing, delimit screen with a colored line. COLOR must be
+        in RGB format. Useful when MODE is "g" or "grab".
+
+        Defaults to #ED2939.
+
+    -t
+        Check if script is running on a TTY
+
+    -h
+        Show usage information.
+
+Examples:
+
+${0##*/} -m g -c '#FFFF00'
+${0##*/} -m grab
+${0##*/} -m n
+${0##*/} -h
+USAGE
+}
+
+err() {
+
+    printf '%s\n' "$*" >&2
+}
+
+readonly TERM_DEV='\l'
+
+i=0
+
+while getopts ':m:c:ht' opt; do
+
+    (( i++ ))
+
+    case "${opt}" in
+        (m)
+
+            mode="${OPTARG}"
+        ;;
+        (c)
+
+            color="${OPTARG}"
+        ;;
+        (t)
+
+            t_opt=1
+        ;;
+        (h)
+
+            usage
+
+            exit 0
+        ;;
+        (:)
+
+            err "-${OPTARG} option requires an argument"
+
+            exit 1
+        ;;
+        ('?')
+
+            err "Illegal option '-${OPTARG}'"
+
+            exit 1
+        ;;
+    esac
+
+done
+
+(( i )) || {
+
+    err 'No options were given'
+
+    exit 1
+}
+
+(( t_opt )) && {
+
+    [[ "${TERM_DEV@P}" =~ ^tty[0-9]+$ ]] && {
+
+        err "${0##*/} must run in a graphical environment"
+
+        exit 1
+    }
+}
+
+# Validate arguments.
+[[ "${mode}" =~ ^g(rab)?$|^n(ormal)?$ ]] || {
+
+    err 'Invalid mode'
+
+    exit 1
+}
+
+[[ "${color}" =~ ^'#'[[:xdigit:]]{6}$ ]] || {
+
+    color='#ED2939'
+}
+
+[[ -w "${PWD}" ]] || {
+
+    err 'Cannot write output file in current directory'
+
+    exit 1
+}
+
+# shellcheck disable=2016
+fname='screenshot-%d-%m-%Y-%T-$wx$h.png'
+
+# Take screenshot
+sleep 1
+
+[[ "${mode}" =~ ^g(rab)?$ ]] && {
+
+    scrot -s -f -F "${fname}" -l color="${color}" -e "mv -- ${fname} ${PWD}" &> /dev/null || {
+
+        notify-send -t 5000 -a "${0##*/}" -u critical 'System event' 'Could not take screenshot'
+
+        exit 1
+    }
+}
+
+[[ "${mode}" =~ ^n(ormal)?$ ]] && {
+
+    scrot -F "${fname}" -e "mv -- ${fname} ${PWD}" &> /dev/null || {
+
+        notify-send -t 5000 -a "${0##*/}" -u critical 'System event' 'Could not take screenshot'
+
+        exit 1
+    }
+}
+
+notify-send -t 5000 -a "${0##*/}" -u low 'System event' 'Screenshot taken'

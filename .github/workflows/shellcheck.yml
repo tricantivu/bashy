@@ -1,0 +1,21 @@
+name: ShellCheck
+
+on: push
+
+jobs:
+  shellcheck:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: "Checkout repository"
+      uses: actions/checkout@main
+
+    - name: Shellcheck
+      uses: ludeeus/action-shellcheck@master
+
+      with:
+        format: gcc
+        scandir: src
+        severity: warning
+        additional_files: install.sh

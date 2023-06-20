@@ -1,0 +1,250 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+key() {
+
+    while read -r line; do
+
+        [[ "${line}" =~ "$1"=* ]] && break
+
+    done < "$2" || return 1
+
+    line="${line##*=}"
+
+    if (( $3 )); then
+        echo "${line//\"/}"
+
+    else
+        echo "${line}"
+
+    fi
+}
+
+# Text properties
+readonly BOLD='\e[1m'
+readonly RESET='\e[0m'
+readonly ULINE='\e[4m'
+
+# Foreground colors
+
+# "Regular"
+readonly RED='\e[31m'
+readonly BLUE='\e[34m'
+readonly WHITE='\e[37m'
+readonly YELLOW='\e[33m'
+
+# Light
+readonly LRED='\e[91m'
+readonly LBLUE='\e[94m'
+readonly LWHITE='\e[97m'
+readonly LYELLOW='\e[93m'
+
+export LC_ALL=C
+
+while getopts ':u:' opt; do
+
+    case "${opt}" in
+        (u)
+
+            readonly UNIT="${OPTARG}"
+
+            [[ "${UNIT}" =~ ^[MG]iB$ ]] || {
+
+                echo "Invalid size unit ${UNIT@Q}"
+
+                exit 1
+            }
+        ;;
+        (:)
+
+            echo "-${OPTARG} option needs an argument"
+
+            exit 1
+        ;;
+        ('?')
+
+            echo "Invalid option '-${OPTARG}'"
+
+            exit 1
+        ;;
+    esac
+done
+
+case "${UNIT}" in
+    (MiB)
+
+        readonly RATIO=1024
+    ;;
+    (GiB)
+
+        readonly RATIO=1048576
+    ;;
+    (*)
+
+        readonly RATIO=1
+    ;;
+esac
+
+readonly TERM_DEV='\l'
+
+if [[ "${TERM_DEV@P}" =~ ^tty[0-9A-Za-z]+$ ]]; then
+    printf '%b\n\n' "${BOLD}${WHITE}Information for:${RESET} ${BOLD}${RED}${USER}${RESET}${BOLD}${YELLOW}@${RESET}${BOLD}${BLUE}${HOSTNAME}${RESET}"
+
+else
+    printf '%b\n\n' "${BOLD}${LWHITE}${ULINE}Information for:${RESET} ${BOLD}${LRED}${USER}${RESET}${BOLD}${LYELLOW}@${RESET}${BOLD}${LBLUE}${HOSTNAME}${RESET}"
+
+fi
+
+readonly SHELL="${SHELL##*/}"
+
+if [[ "${SHELL}" == 'bash' ]]; then
+    readonly RVP="${BASH_VERSINFO[*]:0:3}"
+
+    echo "Shell: ${SHELL^^} ${RVP//' '/.}"
+
+else
+    echo "Shell: ${SHELL^^}"
+
+fi
+
+# shellcheck disable=2155
+readonly ID_LIKE="$(key 'ID_LIKE' '/etc/os-release' 'true')"
+
+p=0
+
+[[ "${ID_LIKE}" == 'arch' ]] && {
+
+    for dir in /var/lib/pacman/local/*; do
+
+        [[ -d "${dir}" ]] && (( p++ ))
+
+    done
+
+    echo "Packages: ${p}"
+}
+
+[[ -f /etc/debian_version ]] && {
+
+    while read -r pkg; do
+
+        [[ "${pkg}" =~ ^Listing\.\.\.$ ]] && continue
+
+        (( p++ ))
+
+    done <<< "$(apt list --installed 2>&-)"
+
+    echo "Packages: ${p}"
+}
+
+[[ -f /etc/redhat-release ]] && {
+
+    while read -r pkg; do
+
+        (( p++ ))
+
+    done <<< "$(dnf list --installed)"
+
+    echo "Packages: ${p}"
+}
+
+[[ "${OSTYPE}" == openbsd* ]] && {
+
+    while read -r pkg; do
+
+        (( p++ ))
+
+    done <<< "$(pkg_info)"
+
+    echo "Packages: ${p}"
+}
+
+echo "Architecture: ${MACHTYPE%%-*}"
+
+# Kernel release
+case "${OSTYPE}" in
+    (openbsd* | FreeBSD)
+
+        echo "Kernel: $(uname -r)"
+    ;;
+    (linux-gnu)
+
+        echo "Kernel: $(< /proc/sys/kernel/osrelease)"
+    ;;
+esac
+
+# shellcheck disable=2155
+[[ -r /etc/os-release && -s /etc/os-release ]] && {
+
+    echo "Distribution: $(key 'NAME' '/etc/os-release' 1)"
+}
+
+if [[ -s /etc/timezone ]]; then
+    printf 'Timezone: %s, UTC %(%z)T\n' "$(< /etc/timezone)"
+
+elif [[ -L /etc/localtime ]]; then
+    tz="$(readlink /etc/localtime)"
+
+    tz=${tz##*zoneinfo/}
+
+    (( "${#tz}" )) && {
+
+        printf 'Timezone: %s, UTC %(%z)T\n' "${tz}"
+    }
+
+    [[ "${OSTYPE}" == 'FreeBSD' && -s /var/db/zoneinfo ]] && {
+
+        printf 'Timezone: %s, UTC %(%z)T\n' "$(< /var/db/zoneinfo)"
+    }
+
+else
+    printf 'Timezone: %(%Z)T, UTC %(%z)T\n'
+
+fi
+
+[[ -f /proc/swaps ]] && {
+
+    swaps=() i=1
+
+    while read -r swp; do
+
+        (( i == 1 )) && {
+
+            (( i++ ))
+            continue
+        }
+
+        mapfile -d $'\t' -t <<< "${swp}"
+
+        name="${MAPFILE[0]%%' '*}"
+
+        if [[ "${swp}" =~ [[:blank:]]+partition[[:blank:]].+$ ]]; then
+            size="$(( ${MAPFILE[1]} / RATIO + 1 ))"
+
+        else
+            size="$(( ${MAPFILE[2]} / RATIO + 1 ))"
+
+        fi
+
+        swaps+=( "${name} (${size})" )
+
+    done < /proc/swaps
+
+    echo "Swaps: ${swaps[*]}"
+}

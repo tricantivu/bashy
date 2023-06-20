@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+usage() {
+
+    local name="${0##*/}"
+
+cat << USAGE
+Description: youtube-dl wrapper that reads URLs from STDIN.
+Usage: ${name} [-a] [-d DIRECTORY] [-l FILE] [-h]
+
+Available options:
+
+    -a
+        Convert downloaded files to an audio format.
+
+    -d DIRECTORY
+        Write downloaded files in DIRECTORY.
+
+        If not specified, files are written in the current directory.
+
+    -h
+        Show usage information.
+
+Examples:
+
+${name} -a -d ~/Downloads
+${name} -d ~/Videos
+${name} -a
+USAGE
+}
+
+err() {
+
+    printf '\e[1m\e[91mERROR:\e[0m %s\n' "$*" >&2
+}
+
+ok() {
+
+    printf '\e[1m\e[92mSUCCESS:\e[0m %s\n' "$*"
+}
+
+download() {
+
+    local cmdline=( 'youtube-dl' )
+
+    (( $1 )) && cmdline+=( '-x' ); shift
+
+    local i=0
+
+    for url in "$@"; do
+
+        # shellcheck disable=2086
+        "${cmdline[@]}" 2> /dev/null -q --no-part \
+                                        --no-warnings \
+                                        --exec "mv -- {} ${outdir}" -- "${url}" || {
+
+            err "${url@Q} could not be downloaded"
+
+            (( i++ ))
+            continue
+        }
+
+        ok "${url@Q} downloaded successfully"
+
+    done
+
+    # shellcheck disable=2086
+    return ${i}
+}
+
+j=0
+
+while getopts ':ad:h' opt; do
+
+    (( j++ ))
+
+    case "${opt}" in
+        (a)
+
+            a_opt=1
+        ;;
+        (d)
+
+            outdir="${OPTARG}"
+        ;;
+        (h)
+
+            usage
+
+            exit 0
+        ;;
+        ('?')
+
+            err "Illegal option '-${OPTARG}'"
+
+            exit 1
+        ;;
+    esac
+
+done
+
+(( j )) || {
+
+    err 'Missing options'
+
+    exit 1
+}
+
+outdir="${outdir:=$PWD}"
+
+[[ -d "${outdir}" ]] || {
+
+    err 'Output directory must exist'
+
+    exit 1
+}
+
+[[ -w "${outdir}" ]] || {
+
+    err "Output directory ${outdir@Q} is unwritable"
+
+    exit 1
+}
+
+mapfile -t urls
+
+(( "${#urls[@]}" )) || {
+
+    err 'Missing input'
+
+    exit 1
+}
+
+(( a_opt )) && {
+
+    download 1 "${urls[@]}"
+
+    exit
+}
+
+download "${urls[@]}"
+
+(( $? == "${#urls[@]}" )) && {
+
+    echo >&2
+
+    err 'Could not download any media'
+
+    exit 1
+}

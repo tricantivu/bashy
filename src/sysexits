@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+usage() {
+
+cat << USAGE
+Usage: ${0##*/} [-h] [-l] [-i] ARGUMENT
+Description: Lookup sysexits code names, values and descriptions
+
+Options:
+    -h
+        Show usage information.
+
+    -l
+        List all exit codes names, values and descriptions
+
+    -i
+        Search strings case-insensitively
+
+Inspired by errno(1)
+USAGE
+}
+
+err() {
+
+    printf '%s: error: %s\n' "${0##*/}" "$*" >&2
+}
+
+readonly SYSEXITS_PATH='/usr/include/sysexits.h'
+
+while getopts ':hli' opt; do
+
+    case "${opt}" in
+        (h)
+
+            usage
+
+            exit 0
+        ;;
+        (l)
+
+            l_opt=true
+        ;;
+        (i)
+
+            shopt -s nocasematch
+        ;;
+        ('?')
+
+            err "invalid option '-${OPTARG}'"
+
+            exit 1
+        ;;
+    esac
+
+done
+
+[[ -f "${SYSEXITS_PATH}" ]] || {
+
+    err 'missing sysexits header file'
+
+    exit 1
+}
+
+[[ -s "${SYSEXITS_PATH}" ]] || {
+
+    err 'sysexits header file is empty'
+
+    exit 1
+}
+
+codes=()
+
+while read -r line; do
+
+    [[ "${line}" =~ ^#define' 'EX_[A-Z]+ ]] && {
+
+        # To correctly split the line into fields we must remove
+        # one of the two tabs used to indent the macro definition.
+        [[ "${BASH_REMATCH[*]#*' '}" == 'EX_OK' ]] && {
+
+            line="${line/$'\t'/}"
+        }
+
+        mapfile -t -d $'\t' <<< "${line#'#define '}"
+
+        MAPFILE[2]="${MAPFILE[2]#'/* '}"
+        MAPFILE[2]="${MAPFILE[2]%' */'*}"
+
+        MAPFILE[2]="${MAPFILE[2]// (*)/}"
+
+        codes+=( "${MAPFILE[*]}" )
+    }
+
+done < "${SYSEXITS_PATH}"
+
+(( $# )) || {
+
+    err 'missing exit code to lookup'
+
+    exit 1
+}
+
+${l_opt:=false} && {
+
+    printf '%s\n' "${codes[@]}"
+
+    exit 0
+}
+
+for info in "${codes[@]}"; do
+
+    # shellcheck disable=2076
+    [[ "${info}" =~ "$1" ]] && {
+
+        echo "${info}"
+
+        break
+    }
+
+done

@@ -1,0 +1,259 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+usage() {
+
+    local name="${0##*/}"
+
+cat << USAGE
+Description: Process information command line utility.
+Usage: ${name} -p PID [-h]
+
+Available options:
+
+    -p PID
+        Show the information for process identifier PID.
+
+    -h
+        Show usage information.
+
+Examples:
+
+${name} -p 1
+${name} -h
+USAGE
+}
+
+err() {
+
+    printf '%s\n' "$*" >&2
+}
+
+i=0
+
+while getopts ':p:h' opt; do
+
+    (( i++ ))
+
+    case "${opt}" in
+        (p)
+
+            pid="${OPTARG}"
+        ;;
+        (h)
+
+            usage
+
+            exit 0
+        ;;
+        (:)
+
+            err "'-${OPTARG}' expected an argument\n"
+
+            usage
+
+            exit 1
+        ;;
+        ('?')
+
+            err "Unknown option '-${OPTARG}'\n"
+
+            usage
+
+            exit 1
+        ;;
+    esac
+
+done
+
+(( i )) || {
+
+    err 'No options were selected\n'
+
+    usage
+
+    exit 1
+}
+
+[[ "${pid}" =~ ^[1-9]+[0-9]*$ ]] || {
+
+    err 'Invalid PID'
+
+    usage
+
+    exit 1
+}
+
+kill -0 "${pid}" &> /dev/null || {
+
+    export LC_ALL=C
+
+    if [[ "$(kill -0 "${pid}" 2>&1)" =~ 'Operation not permitted' ]]; then
+        err 'Lacking permissions to get PID information'
+
+        exit 1
+
+    else
+        err "PID ${pid@Q} does not exist"
+
+        exit 1
+
+    fi
+}
+
+[[ "${OSTYPE}" == 'linux-gnu' ]] || {
+
+    err 'Script only runs in Linux'
+
+    exit 1
+}
+
+printf 'PID %u information:\n\n' "${pid}"
+
+# Executable
+echo "Process: $(< "/proc/${pid}/comm")"
+
+while read -r line; do
+
+    [[ "${line}" == State:* ]] && {
+
+        line="${line##*\(}"
+        line="${line:0:-1}"
+        line="${line^}"
+
+        echo "Status: ${line}"
+
+        break
+    }
+
+done < "/proc/${pid}/status"
+
+[[ -f /etc/passwd && -r /etc/passwd ]] || {
+
+    err '/etc/passwd is missing and its required for user lookup'
+
+    exit 1
+}
+
+[[ -f /etc/group && -r /etc/group ]] || {
+
+    err '/etc/group is missing and its required for group lookup'
+
+    exit 1
+}
+
+while read -r line; do
+
+    [[ "${line%%:*}" == Uid ]] && {
+
+        : "${line#Uid:$'\t'}"
+
+        uid="${_%%$'\t'*}"
+    }
+
+    [[ "${line%%:*}" == Gid ]] && {
+
+        : "${line#Gid:$'\t'}"
+
+        gid="${_%%$'\t'*}"
+    }
+
+done < "/proc/${pid}/status"
+
+while read -r line; do
+
+        mapfile -t -d ':' fields <<< "${line}"
+
+        [[ "${fields[2]}" == "${uid}" ]] && {
+
+            name="${fields[0]}"
+
+            break
+        }
+
+done < /etc/passwd
+
+while read -r line; do
+
+    [[ "${line}" =~ :"${gid}": ]] && {
+
+        grp="${line%%:*}"
+
+        break
+    }
+
+done < /etc/group
+
+while read -r line; do
+
+    echo "${line}"
+
+done << INFO
+Ownership:
+
+User: ${name} (UID ${uid})
+Group: ${grp} (GID ${gid})
+
+INFO
+
+# File descriptors
+fds=()
+
+for fd in "/proc/${pid}/fd"/*; do
+
+    [[ -L "${fd}" ]] && {
+
+        fds+=( "${fd##*/}" )
+    }
+
+    continue
+
+done
+
+for (( i=0; i < "${#fds[@]}"; i++ )); do
+
+    for (( j=0; j < "${#fds[@]}" - i - 1; j++ )); do
+
+            (( fds[j] > fds[j + 1] )) && {
+
+                (( fds[j] ^= fds[j + 1] ))
+
+                (( fds[j + 1] ^= fds[j] ))
+
+                (( fds[j] ^= fds[j + 1] ))
+            }
+
+    done
+
+done
+
+printf 'File descriptors: %s\n\n' "${fds[*]}"
+
+# Command line
+mapfile -t -d $'\0' cmdline < "/proc/${pid}/cmdline"
+
+printf 'Command line: %s\n\n' "${cmdline[*]}"
+
+# Environment
+mapfile -t -d $'\0' env < "/proc/${pid}/environ"
+
+printf 'Environment variables:\n\n'
+
+printf '%s\n' "${env[@]}"

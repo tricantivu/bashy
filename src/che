@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+usage() {
+
+    local name="${0##*/}"
+
+cat << USAGE
+Description: Change account expiration dates with relative time units.
+Usage: ${name} UNIT USER
+
+Examples:
+
+${name} 5M john
+${name} 25d ${USER}
+${name} 100Y mallory
+
+Time units are specified as a positive integer followed
+by either letter "d", "m" or "y" (case-insensitive).
+Letter "d" represents days, "m" months and "y" years.
+USAGE
+}
+
+err() {
+
+    printf '%s\n' "$*" >&2
+}
+
+readonly SHADOW_FILE='/etc/shadow'
+readonly PASSWD_FILE='/etc/passwd'
+
+(( $# == 2 )) || {
+
+    err 'Two arguments are needed\n'
+
+    usage
+
+    exit 64
+}
+
+shopt -s nocasematch
+
+[[ "$1" =~ ^[0-9]+[dmy]$ ]] || {
+
+    err 'Invalid time unit'
+
+    exit 64
+}
+
+[[ -f "${SHADOW_FILE}" ]] || {
+
+    err "Could not find file ${SHADOW_FILE}"
+
+    exit 72
+}
+
+[[ -f "${PASSWD_FILE}" ]] || {
+
+    err "Could not find file ${PASSWD_FILE}"
+
+    exit 72
+}
+
+while read -r line; do
+
+    [[ "${line}" == "$2"* ]] && break
+
+done < "${PASSWD_FILE}" || {
+
+    echo "Unexisting user ${2@Q}"
+
+    exit 67
+}
+
+case "${1:(-1)}" in
+    (d)
+
+        time="${1/[Dd]/ days}"
+    ;;
+    (m)
+
+        time="${1/[Mm]/ months}"
+    ;;
+    (y)
+
+        time="${1/[Yy]/ years}"
+    ;;
+esac
+
+while read -r -d $'\0' line; do
+
+    [[ "${line}" == 'GNU coreutils' ]] && break
+
+done < "$(type -P date)" || {
+
+    err 'GNU date command is required to generate dates'
+
+    exit 70
+}
+
+# Generate expiration date.
+edate="$(date -d "${time}" '+%Y-%m-%d')"
+
+shopt -u nocasematch
+
+printf 'Expiration date: %s\n\n' "${edate}"
+
+read -r -p $'Is the date correct? [Y/N]\n'
+
+until [[ "${REPLY}" =~ ^[Yy](es)?$|^YES$|^N[Oo]$|^[Nn]$|^no$ ]]; do
+
+    read -r -p $'Invalid confirmation reply, try again.\n'
+
+done
+
+[[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]] && {
+
+    printf '\nExiting...\n'
+
+    exit 0
+}
+
+# Set account expiration date.
+echo
+
+chage -E "${edate}" "$2" &> /dev/null || {
+
+    err 'Could not change expiration date'
+
+    exit 69
+}
+
+echo 'Successfully changed expiration date.'

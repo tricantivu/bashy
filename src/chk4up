@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# modeline vim: et ai ts=4 tw=109
+
+# Copyright (C) 2022 Alejandro Cervera
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
+
+err() {
+
+    printf '%s\n' "$*" >&2
+}
+
+readonly TERM_DEV='\l'
+
+[[ "${TERM_DEV@P}" =~ ^tty[0-9]+$ ]] && {
+
+    err 'chk4up must run in a graphical environment'
+
+    exit 1
+}
+
+pamac checkupdates -a &> /dev/null
+
+case $? in
+    (100)
+
+        notify-send -a 'chk4up' -u low 'System event' 'Updating AUR packages'
+
+        pamac upgrade -a --no-confirm &> /dev/null || {
+
+            notify-send -a 'chk4up' -u critical 'System event' 'Failed to update AUR packages'
+
+            exit 1
+        }
+
+        notify-send -a 'chk4up' -u low 'System event' 'Successfully updated AUR packages'
+    ;;
+    (1)
+
+        notify-send -a 'chk4up' -u critical 'System event' 'Failed to search updates for AUR packages'
+    ;;
+    (0)
+
+        notify-send -a 'chk4up' -u low 'System event' 'All AUR packages are up to date'
+    ;;
+    (*)
+
+        err 'Failed to update AUR packages'
+
+        exit 1
+    ;;
+esac
