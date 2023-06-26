@@ -16,6 +16,9 @@ Options:
     -i
         Search strings case-insensitively
 
+    -g
+        Treat ARGUMENT as a glob pattern
+
 Inspired by errno(1)
 USAGE
 }
@@ -27,7 +30,11 @@ err() {
 
 readonly SYSEXITS_PATH='/usr/include/sysexits.h'
 
-while getopts ':hli' opt; do
+i=0
+
+while getopts ':hlig' opt; do
+
+    (( i++ ))
 
     case "${opt}" in
         (h)
@@ -43,6 +50,10 @@ while getopts ':hli' opt; do
         (i)
 
             shopt -s nocasematch
+        ;;
+        (g)
+
+            g_opt=true
         ;;
         ('?')
 
@@ -107,14 +118,39 @@ ${l_opt:=false} && {
     exit 0
 }
 
-for info in "${codes[@]}"; do
+pattern="${@: -1}"
 
-    # shellcheck disable=2076
-    [[ "${info}" =~ "$1" ]] && {
+# Quote whitespace to prevent word splitting
+[[ "${pattern}" =~ [[:blank:]] ]] && {
 
-        echo "${info}"
+    quoted="${pattern//[[:blank:]]/' '}"
+}
 
-        break
-    }
+if ${g_opt:=false}; then
 
-done
+    for info in "${codes[@]}"; do
+
+        # shellcheck disable=2053,2076
+        [[ "${info}" == ${quoted:="${pattern}"} ]] && {
+
+            echo "${info}"
+
+            break
+        }
+
+    done
+
+else
+    for info in "${codes[@]}"; do
+
+        # shellcheck disable=2076
+        [[ "${info}" =~ ${quoted:="${pattern}"} ]] && {
+
+            echo "${info}"
+
+            break
+        }
+
+    done
+
+fi
