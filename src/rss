@@ -50,14 +50,15 @@ prompt() {
 
     read -r -p 'Would you like to open Newsboat? [Y/N] '
 
-    [[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]] && {
-
+    if [[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]]; then
         printf '\nExiting...\n'
 
-        exit 0
-    }
+        return 1
 
-    exec newsboat -q 2> /dev/null
+    elif [[ "${REPLY}" =~ ^Y(ES|es)$|^[Yy]$|^yes$ ]]; then
+        return 0
+
+    fi
 }
 
 feeds="${HOME}/.newsboat/urls"
@@ -98,11 +99,23 @@ cdir="${feeds%'/urls'}"
 
     printf '%s\n' "$@" >> "${feeds}" && {
 
-        prompt
+        if prompt; then
+            exec newsboat -q 2> /dev/null
+
+        else
+            exit
+
+        fi
     }
 }
 
 printf '%s\n' "$@" > "${feeds}" && {
 
-    prompt
+    if prompt; then
+        exec newsboat -q 2> /dev/null
+
+    else
+        exit
+
+    fi
 }
