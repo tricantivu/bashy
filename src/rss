@@ -48,7 +48,7 @@ err() {
 
 prompt() {
 
-    read -r -p $'Would you like to open Newsboat? [Y/N]\n'
+    read -r -p 'Would you like to open Newsboat? [Y/N] '
 
     [[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]] && {
 
