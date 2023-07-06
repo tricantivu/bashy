@@ -361,11 +361,6 @@ echo $*
 ![si](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/si.gif)
 
 
-### *dl* - youtube-dl wrapper that reads URLs from STDIN.
-
-![dl](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/dl.gif)
-
-
 ### *screenshot* - scrot wrapper.
 
 ![screenshot](https://raw.githubusercontent.com/tricantivu/bashy/master/gifs/screenshot.gif)
