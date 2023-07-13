@@ -30,7 +30,7 @@ read -r s < /proc/uptime
 
 s=${s%%.*}
 m=$(( s / 60 % 60 ))
-h=$(( s / 60 / 60 % 60 ))
+h=$(( s / 3600 % 60 ))
 
 if [ ${h} -gt 0 ]; then
     if [ ${h} -eq 1 ]; then
