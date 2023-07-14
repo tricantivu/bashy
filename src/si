@@ -105,10 +105,10 @@ esac
 readonly TERM_DEV='\l'
 
 if [[ "${TERM_DEV@P}" =~ ^tty[0-9A-Za-z]+$ ]]; then
-    printf '%b\n\n' "${BOLD}${WHITE}Information for:${RESET} ${BOLD}${RED}${USER}${RESET}${BOLD}${YELLOW}@${RESET}${BOLD}${BLUE}${HOSTNAME}${RESET}"
+    printf "${BOLD}${WHITE}Information for:${RESET} ${BOLD}${RED}${USER}${RESET}${BOLD}${YELLOW}@${RESET}${BOLD}${BLUE}${HOSTNAME}${RESET}\n\n"
 
 else
-    printf '%b\n\n' "${BOLD}${LWHITE}${ULINE}Information for:${RESET} ${BOLD}${LRED}${USER}${RESET}${BOLD}${LYELLOW}@${RESET}${BOLD}${LBLUE}${HOSTNAME}${RESET}"
+    printf "${BOLD}${LWHITE}${ULINE}Information for:${RESET} ${BOLD}${LRED}${USER}${RESET}${BOLD}${LYELLOW}@${RESET}${BOLD}${LBLUE}${HOSTNAME}${RESET}\n\n"
 
 fi
 
