@@ -128,7 +128,9 @@ kill -0 "${pid}" &> /dev/null || {
 printf 'PID %u information:\n\n' "${pid}"
 
 # Executable
-echo "Process: $(< "/proc/${pid}/comm")"
+read -r -d $'\0' cmdline < "/proc/${pid}/cmdline"
+
+printf 'Process: %s\n' "${cmdline##*/}"
 
 while read -r line; do
 
