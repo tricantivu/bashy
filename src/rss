@@ -93,7 +93,7 @@ shift ${i}
 
 (( $# )) || {
 
-    err 'No feeds to add.\n'
+    err $'No feeds to add.\n'
 
     usage
 
