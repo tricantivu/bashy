@@ -32,12 +32,17 @@ usage() {
 
 cat << USAGE
 Description: Add feeds to Newsboat.
-Usage: ${name} URL...
+Usage: ${name} [-c] URL...
 
 Examples:
 
 ${name} "http://rss.cnn.com/rss/edition_world.rss"
 ${name} "https://news.ycombinator.com/rss"
+
+Available options:
+
+    -c
+        Confirm before writing arguments in Newsboat feeds file.
 USAGE
 }
 
@@ -48,7 +53,7 @@ err() {
 
 prompt() {
 
-    read -r -p 'Would you like to open Newsboat? [Y/N] '
+    read -r -p "$1"
 
     if [[ "${REPLY}" =~ ^N[Oo]$|^[Nn]$|^no$ ]]; then
         printf '\nExiting...\n'
@@ -62,6 +67,29 @@ prompt() {
 }
 
 readonly FEEDS_PATH="${HOME}/.newsboat/urls"
+
+i=0
+
+while getopts ':c' opt; do
+
+    (( i++ ))
+
+    case "${opt}" in
+        (c)
+
+            c_opt=1
+        ;;
+        ('?')
+
+            err "Illegal option '-{OPTARG}'"
+
+            exit 1
+        ;;
+    esac
+
+done
+
+shift ${i}
 
 (( $# )) || {
 
@@ -95,11 +123,19 @@ cdir="${FEEDS_PATH%'/urls'}"
     exit 1
 }
 
+(( c_opt )) && {
+
+    prompt "Proceed writing feeds in ${FEEDS_PATH@Q}? [Y/N] " || {
+
+        exit
+    }
+}
+
 [[ -s "${FEEDS_PATH}" ]] && {
 
     printf '%s\n' "$@" >> "${FEEDS_PATH}" && {
 
-        if prompt; then
+        if prompt 'Would you like to open Newsboat? [Y/N] '; then
             exec newsboat -q 2> /dev/null
 
         else
@@ -111,7 +147,7 @@ cdir="${FEEDS_PATH%'/urls'}"
 
 printf '%s\n' "$@" > "${FEEDS_PATH}" && {
 
-    if prompt; then
+    if prompt 'Would you like to open Newsboat? [Y/N] '; then
         exec newsboat -q 2> /dev/null
 
     else
