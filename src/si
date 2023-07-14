@@ -144,7 +144,7 @@ p=0
 
     while read -r pkg; do
 
-        [[ "${pkg}" =~ ^Listing\.\.\.$ ]] && continue
+        [[ "${pkg}" =~ ^Listing\.+$ ]] && continue
 
         (( p++ ))
 
