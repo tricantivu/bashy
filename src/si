@@ -29,7 +29,7 @@ key() {
     line="${line##*=}"
 
     if (( $3 )); then
-        echo "${line//\"/}"
+        echo "${line:1:-1}"
 
     else
         echo "${line}"
