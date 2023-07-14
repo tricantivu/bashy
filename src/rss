@@ -61,7 +61,7 @@ prompt() {
     fi
 }
 
-feeds="${HOME}/.newsboat/urls"
+readonly FEEDS_PATH="${HOME}/.newsboat/urls"
 
 (( $# )) || {
 
@@ -72,7 +72,7 @@ feeds="${HOME}/.newsboat/urls"
     exit 1
 }
 
-cdir="${feeds%'/urls'}"
+cdir="${FEEDS_PATH%'/urls'}"
 
 [[ -d "${cdir}" ]] || {
 
@@ -88,16 +88,16 @@ cdir="${feeds%'/urls'}"
     exit 1
 }
 
-[[ -w "${feeds}" ]] || {
+[[ -w "${FEEDS_PATH}" ]] || {
 
-    err "${feeds@Q} must be writable."
+    err "${FEEDS_PATH@Q} must be writable."
 
     exit 1
 }
 
-[[ -s "${feeds}" ]] && {
+[[ -s "${FEEDS_PATH}" ]] && {
 
-    printf '%s\n' "$@" >> "${feeds}" && {
+    printf '%s\n' "$@" >> "${FEEDS_PATH}" && {
 
         if prompt; then
             exec newsboat -q 2> /dev/null
@@ -109,7 +109,7 @@ cdir="${feeds%'/urls'}"
     }
 }
 
-printf '%s\n' "$@" > "${feeds}" && {
+printf '%s\n' "$@" > "${FEEDS_PATH}" && {
 
     if prompt; then
         exec newsboat -q 2> /dev/null
