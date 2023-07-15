@@ -61,50 +61,6 @@ readonly LYELLOW='\e[93m'
 
 export LC_ALL=C
 
-while getopts ':u:' opt; do
-
-    case "${opt}" in
-        (u)
-
-            readonly UNIT="${OPTARG}"
-
-            [[ "${UNIT}" =~ ^[MG]iB$ ]] || {
-
-                echo "Invalid size unit ${UNIT@Q}"
-
-                exit 1
-            }
-        ;;
-        (:)
-
-            echo "-${OPTARG} option needs an argument"
-
-            exit 1
-        ;;
-        ('?')
-
-            echo "Invalid option '-${OPTARG}'"
-
-            exit 1
-        ;;
-    esac
-done
-
-case "${UNIT}" in
-    (MiB)
-
-        readonly RATIO=1024
-    ;;
-    (GiB)
-
-        readonly RATIO=1048576
-    ;;
-    (*)
-
-        readonly RATIO=1
-    ;;
-esac
-
 readonly TERM_DEV='\l'
 
 if [[ "${TERM_DEV@P}" =~ ^tty[0-9A-Za-z]+$ ]]; then
@@ -221,25 +177,18 @@ fi
 
 [[ -f /proc/swaps ]] && {
 
-    swaps=() i=1
+    swaps=()
 
-    while read -r swp; do
+    while read -r line; do
 
-        (( i == 1 )) && {
+        if [[ "${line}" == /* ]]; then
+            name="${line%%' '*}"
 
-            (( i++ ))
-            continue
-        }
-
-        mapfile -d $'\t' -t <<< "${swp}"
-
-        name="${MAPFILE[0]%%' '*}"
-
-        if [[ "${swp}" =~ [[:blank:]]+partition[[:blank:]].+$ ]]; then
-            size="$(( ${MAPFILE[1]} / RATIO + 1 ))"
+            : "${line#*$'\t'}"
+            size="${_%%$'\t'*}"
 
         else
-            size="$(( ${MAPFILE[2]} / RATIO + 1 ))"
+            continue
 
         fi
 
