@@ -71,17 +71,7 @@ else
 
 fi
 
-readonly SHELL="${SHELL##*/}"
-
-if [[ "${SHELL}" == 'bash' ]]; then
-    readonly RVP="${BASH_VERSINFO[*]:0:3}"
-
-    echo "Shell: ${SHELL^^} ${RVP//' '/.}"
-
-else
-    echo "Shell: ${SHELL^^}"
-
-fi
+(( "${#SHELL}" )) && printf 'Shell: %s\n' "${SHELL##*/}"
 
 p=0
 
