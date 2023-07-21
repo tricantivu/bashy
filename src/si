@@ -40,34 +40,21 @@ key() {
     fi
 }
 
-# Text properties
 readonly BOLD='\e[1m'
 readonly RESET='\e[0m'
-readonly ULINE='\e[4m'
 
-# Foreground colors
-
-# "Regular"
-readonly RED='\e[31m'
-readonly BLUE='\e[34m'
 readonly WHITE='\e[37m'
-readonly YELLOW='\e[33m'
-
-# Light
-readonly LRED='\e[91m'
-readonly LBLUE='\e[94m'
 readonly LWHITE='\e[97m'
-readonly LYELLOW='\e[93m'
 
 export LC_ALL=C
 
 readonly TERM_DEV='\l'
 
 if [[ "${TERM_DEV@P}" =~ ^tty[0-9A-Za-z]+$ ]]; then
-    printf "${BOLD}${WHITE}Information for:${RESET} ${BOLD}${RED}${USER}${RESET}${BOLD}${YELLOW}@${RESET}${BOLD}${BLUE}${HOSTNAME}${RESET}\n\n"
+    printf "%b%bSystem information%b:\n\n" "${BOLD}" "${WHITE}" "${RESET}"
 
 else
-    printf "${BOLD}${LWHITE}${ULINE}Information for:${RESET} ${BOLD}${LRED}${USER}${RESET}${BOLD}${LYELLOW}@${RESET}${BOLD}${LBLUE}${HOSTNAME}${RESET}\n\n"
+    printf "%b%bSystem information%b:\n\n" "${BOLD}" "${LWHITE}" "${RESET}"
 
 fi
 
