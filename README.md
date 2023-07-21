@@ -29,6 +29,7 @@ directory and clone it again.
 | youtube-dl >= 2021.12.17 | apt >= 2.7.0   | shadow >= 4.12.3 | pamac >= 10        | scrot >= 1.9         |
 |                          | dnf >= 4.15.0  |                  | libnotify >= 0.8.2 | libnotify >= 0.8.2   |
 |                          | pacman >= 6    |                  |                    |                      |
+|                          | ncurses >= 6.4 |                  |                    |                      |
 
 # Installation ⬇
 

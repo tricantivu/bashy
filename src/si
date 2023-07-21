@@ -40,14 +40,19 @@ key() {
     fi
 }
 
-readonly BOLD='\e[1m'
-readonly RESET='\e[0m'
-
-readonly WHITE='\e[37m'
-
 export LC_ALL=C
 
-printf "%b%bSystem information%b:\n\n" "${BOLD}" "${WHITE}" "${RESET}"
+readonly BOLD="$(tput bold)"
+readonly RESET="$(tput sgr0)"
+readonly WHITE="$(tput setaf 7)"
+
+if (( "${#BOLD}" && "${#WHITE}" && "${#RESET}" )); then
+    printf "%b%bSystem information%b:\n\n" "${BOLD}" "${WHITE}" "${RESET}"
+
+else
+    printf 'System information:\n\n'
+
+fi
 
 if (( "${#SHELL}" )); then
     printf 'Shell: %s\n' "${SHELL##*/}"
