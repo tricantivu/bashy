@@ -44,19 +44,10 @@ readonly BOLD='\e[1m'
 readonly RESET='\e[0m'
 
 readonly WHITE='\e[37m'
-readonly LWHITE='\e[97m'
 
 export LC_ALL=C
 
-readonly TERM_DEV='\l'
-
-if [[ "${TERM_DEV@P}" =~ ^tty[0-9A-Za-z]+$ ]]; then
-    printf "%b%bSystem information%b:\n\n" "${BOLD}" "${WHITE}" "${RESET}"
-
-else
-    printf "%b%bSystem information%b:\n\n" "${BOLD}" "${LWHITE}" "${RESET}"
-
-fi
+printf "%b%bSystem information%b:\n\n" "${BOLD}" "${WHITE}" "${RESET}"
 
 if (( "${#SHELL}" )); then
     printf 'Shell: %s\n' "${SHELL##*/}"
