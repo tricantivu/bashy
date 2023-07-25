@@ -62,6 +62,15 @@ else
 
 fi
 
+# Set if gethostname system call fails
+if [[ "${HOSTNAME}" == '??host??' ]]; then
+    printf 'Hostname: Could not be detected' >&2
+
+else
+    printf 'Hostname: %s\n' "${HOSTNAME}"
+
+fi
+
 p=0
 
 # shellcheck disable=2155
